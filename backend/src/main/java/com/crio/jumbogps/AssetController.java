@@ -2,11 +2,14 @@ package com.crio.jumbogps;
 
 import java.util.Date;
 import java.util.List;
-
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.crio.model.AssetDetail;
 import com.crio.model.AssetHistory;
@@ -42,7 +45,19 @@ public class AssetController {
 		}
 	}
 	
+	@GetMapping("/location/{id}")
+	public List<AssetHistory> getAAssetsHistoryById(@PathVariable("id") int assetId) {
+		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
+		if(assetDetailOptional.isPresent()) {
+			return assetHistoryRepository.getAssetDetailByIdSinceLastDay(assetDetailOptional.get().getPkAssetId());
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not found");
+		}	
+	}
 	
-	
-	
+	@GetMapping("/location/activeToday")
+	public List<AssetHistory> getAAssetsHistoryActiveToday() {
+		return assetHistoryRepository.getAssetDetailSinceLastDay();
+		
+	}
 }
