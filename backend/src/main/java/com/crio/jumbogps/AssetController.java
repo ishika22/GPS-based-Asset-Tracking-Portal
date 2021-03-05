@@ -55,9 +55,30 @@ public class AssetController {
 		}	
 	}
 	
+	@GetMapping("/location/type/{type}")
+	public List<AssetHistory> getAAssetsHistoryByType(@PathVariable("type") int assetType) {
+		return assetHistoryRepository.getAssetDetailByType(assetType);
+	}
+	
 	@GetMapping("/location/activeToday")
 	public List<AssetHistory> getAAssetsHistoryActiveToday() {
-		return assetHistoryRepository.getAssetDetailSinceLastDay();
-		
+		return assetHistoryRepository.getAssetDetailSinceLastDay();	
+	}
+	
+	@GetMapping("/asset/{id}")
+	public AssetHistory getAssetDetailById(@PathVariable("id") int assetId) {
+		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
+		if(assetDetailOptional.isPresent()) {
+			List<AssetHistory> assetHistoryList = assetHistoryRepository.getAssetDetailById(assetId);
+			if(assetHistoryList.size()>0) {
+				return assetHistoryList.get(0);
+			}else {
+				AssetHistory assetHistory = new AssetHistory();
+				assetHistory.setFkAssetId(assetDetailOptional.get());
+				return assetHistory;
+			}
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not found");
+		}	
 	}
 }

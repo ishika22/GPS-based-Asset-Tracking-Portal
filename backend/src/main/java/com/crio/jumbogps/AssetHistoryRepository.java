@@ -19,4 +19,10 @@ public interface AssetHistoryRepository extends JpaRepository<AssetHistory, Inte
 	@Query("SELECT assets FROM AssetHistory assets WHERE  TIMEDIFF(NOW(), timeOfTracking) < '24:00:00' GROUP BY fkAssetId")
 	List<AssetHistory> getAssetDetailSinceLastDay();
 	
+	@Query("SELECT assets FROM AssetHistory assets WHERE  fkAssetId.pkAssetId = :assetId ORDER BY timeOfTracking DESC")
+	List<AssetHistory> getAssetDetailById(@Param("assetId") Integer assetId);
+	
+	@Query("SELECT assets FROM AssetHistory assets WHERE timeOfTracking IN(SELECT MAX(timeOfTracking) FROM AssetHistory GROUP BY fkAssetId) AND fkAssetId.fkAssetType.pkAssetTypeId = :assetType")
+	List<AssetHistory> getAssetDetailByType(@Param("assetType") Integer assetType);
+	
 }
