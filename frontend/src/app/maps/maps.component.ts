@@ -21,8 +21,15 @@ export class MapsComponent implements OnInit {
     minZoom: 12 ,
   }
   assetLogs:  any[]  = (data  as  any).default;
-  constructor(private pipe : DatePipe) { }
-  
+  constructor(private pipe : DatePipe) {}
+  icons: Record<string, { icon: string }> = {
+    Salesperson: {
+      icon: "http://maps.google.com/mapfiles/kml/shapes/man.png",
+    },
+    Truck: {
+      icon: "http://maps.google.com/mapfiles/kml/shapes/truck.png",
+    }
+  } 
   ngOnInit(): void {
     //set center of map
     this.center = {
@@ -37,9 +44,9 @@ export class MapsComponent implements OnInit {
       },
       options: {
         animation: google.maps.Animation.DROP,
-        icon: "http://maps.google.com/mapfiles/kml/shapes/truck.png"
+        icon: this.icons[i.fkAssetId.fkAssetType.assetType].icon
       },
-      name:i.timeOfTracking
+      name:i
     }})    
 
     console.log(this.markers)
@@ -49,17 +56,17 @@ export class MapsComponent implements OnInit {
   click(event: google.maps.MouseEvent) {
     console.log(event)
   }
-  openInfo(marker: MapMarker,name:string) {
-    const description='loagnaogaognagn aajfofajoa'
-    const hours='car'
-    const phone='3'
-    name = this.pipe.transform(name, 'MMMM d, y, h:mm:ss a');
+  openInfo(marker: MapMarker,data:any) {
+    const type=data.fkAssetId.fkAssetType.assetType
+
+    const name=data.fkAssetId.assetName
+    const contactDetails = data.fkAssetId.assetContactDetail || 'NA'
+    const date = this.pipe.transform(data.timeOfTracking, 'MMMM d, y, h:mm:ss a');
     const content = `
-      <h2>${name}</h2><p>${description}</p>
-      <p><b>Type:</b> ${hours}<br/><b>Phone:</b> ${phone}</p>
+      <h2>${name}</h2><p>${date}</p>
+      <p><b>Type:</b> ${type}<br/><b>Contact Details:</b> ${contactDetails}</p>
       <button>check history</button>
     `
-    console.log(marker);
     this.info.options={pixelOffset: new google.maps.Size(0, -30),content}
     this.info.open(marker)
     
