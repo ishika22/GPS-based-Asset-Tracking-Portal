@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MapsComponent } from './maps/maps.component';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,7 @@ import { MapsComponent } from './maps/maps.component';
     BrowserAnimationsModule,
     GoogleMapsModule
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent,MapsComponent]
 })
 export class AppModule { }

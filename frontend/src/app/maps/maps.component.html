@@ -1,9 +1,23 @@
 <google-map   
-    [center]="center"
+
     [options]="options"
     width=100%
     height=91%
-    >
+    [center]="center"
+    [options]="options"
+    [zoom]="zoom"
+    (mapClick)="click($event)"
+  >
 
+    <map-marker
+    #markerElem="mapMarker"
+    *ngFor="let marker of markers"
+    [position]="marker.position"
+    [label]="marker.label"
+    [options]="marker.options"
+    (mapClick)="openInfo(markerElem,marker.name)"
+  >
+  </map-marker>
+  <map-info-window ></map-info-window>
 </google-map>
 
