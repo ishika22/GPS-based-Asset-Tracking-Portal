@@ -18,6 +18,13 @@
     (mapClick)="openInfo(markerElem,marker.name)"
   >
   </map-marker>
-  <map-info-window ></map-info-window>
+  <map-marker
+    *ngFor="let vertice of vertices"
+    [options]=assetHistoryMarkerIcon
+    [position]=vertice
+  >
+  </map-marker>
+  <map-info-window (closeclick)="closeClick()"></map-info-window>
+  <map-polyline [path]="vertices"></map-polyline>
 </google-map>
 

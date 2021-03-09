@@ -7,11 +7,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MapsComponent } from './maps/maps.component';
 import { DatePipe } from '@angular/common';
+import { TimeAgoPipe } from 'time-ago-pipe';
+import { SearchBoxComponent } from './search-box/search-box.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MapsComponent
+    MapsComponent,
+    SearchBoxComponent
   ],
   imports: [
     BrowserModule,
@@ -19,7 +22,7 @@ import { DatePipe } from '@angular/common';
     BrowserAnimationsModule,
     GoogleMapsModule
   ],
-  providers: [DatePipe],
+  providers: [DatePipe,TimeAgoPipe],
   bootstrap: [AppComponent,MapsComponent]
 })
 export class AppModule { }
