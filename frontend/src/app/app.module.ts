@@ -9,6 +9,8 @@ import { MapsComponent } from './maps/maps.component';
 import { DatePipe } from '@angular/common';
 import { TimeAgoPipe } from 'time-ago-pipe';
 import { SearchBoxComponent } from './search-box/search-box.component';
+import { OwlDateTimeModule, OwlNativeDateTimeModule, OWL_DATE_TIME_LOCALE } from '@danielmoncada/angular-datetime-picker';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,9 +22,14 @@ import { SearchBoxComponent } from './search-box/search-box.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    GoogleMapsModule
+    GoogleMapsModule,
+  FormsModule,
+  ReactiveFormsModule,
+    OwlNativeDateTimeModule,
+    OwlDateTimeModule
+    
   ],
-  providers: [DatePipe,TimeAgoPipe],
+  providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'}],
   bootstrap: [AppComponent,MapsComponent]
 })
 export class AppModule { }
