@@ -1,6 +1,6 @@
 package com.crio.repository;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,6 +24,6 @@ public interface AssetHistoryRepository extends JpaRepository<AssetHistory, Inte
 	List<AssetHistory> getAssetDetailByType(@Param("assetType") Integer assetType);
 	
 	@Query("SELECT assets FROM AssetHistory assets WHERE timeOfTracking >= :startDate and timeOfTracking <= :endDate")
-	List<AssetHistory> getAssetDetailsByTime(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+	List<AssetHistory> getAssetDetailsByTime(@Param("startDate") LocalDateTime start, @Param("endDate") LocalDateTime end);
 	
 }

@@ -1,6 +1,6 @@
 package com.crio.controller;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +46,7 @@ public class AssetController {
 		assetHistory.setFkAssetId(assetDetail);
 		assetHistory.setLatitude(latitude);
 		assetHistory.setLongitude(longitude);
-		assetHistory.setTimeOfTracking(new Date());
+		assetHistory.setTimeOfTracking(LocalDateTime.now());
 		assetHistoryRepository.save(assetHistory);
 		}
 	}
@@ -72,17 +72,18 @@ public class AssetController {
 		}	
 	}
 	
-	/*@GetMapping("/location/time")
-	public List<AssetHistory> getAAssetsHistoryByTime(@RequestParam("startTime") String startDate , @RequestParam("endTime") String endDate) {
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+	@GetMapping("/location/time")
+	public List<AssetHistory> getAAssetsHistoryByTime(@RequestParam("startTime") String startTime , @RequestParam("endTime") String endTime) {
+		/*DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);*/
 		try {
-		Date start = format.parse(startDate);
-		Date end = format.parse(endDate);
+		LocalDateTime start = LocalDateTime.parse(startTime);
+		LocalDateTime end = LocalDateTime.parse(endTime);
 		return assetHistoryRepository.getAssetDetailsByTime(start,end);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 		
-	}*/
+	}
 }
