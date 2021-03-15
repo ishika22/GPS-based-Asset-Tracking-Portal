@@ -1,4 +1,4 @@
-package com.crio.jumbogps;
+package com.crio.controller;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.crio.model.AssetDetail;
 import com.crio.model.AssetHistory;
+import com.crio.repository.AssetDetailRepository;
+import com.crio.repository.AssetHistoryRepository;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 

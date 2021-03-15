@@ -1,4 +1,4 @@
-package com.crio.jumbogps;
+package com.crio.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
