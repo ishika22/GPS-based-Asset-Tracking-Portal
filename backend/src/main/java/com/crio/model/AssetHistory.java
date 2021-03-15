@@ -1,6 +1,6 @@
 package com.crio.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "asset_history")
@@ -20,7 +18,7 @@ public class AssetHistory {
 	
 	private Integer pkAssetHistoryDetailId;
 	private AssetDetail fkAssetId;
-	private Date timeOfTracking;
+	private LocalDateTime timeOfTracking;
 	private Double latitude;
 	private Double longitude;
 	
@@ -44,11 +42,10 @@ public class AssetHistory {
 	}
 	
 	@Column(name = "time_of_tracking")
-	@Temporal(value = TemporalType.TIMESTAMP)
-	public Date getTimeOfTracking() {
+	public LocalDateTime getTimeOfTracking() {
 		return timeOfTracking;
 	}
-	public void setTimeOfTracking(Date timeOfTracking) {
+	public void setTimeOfTracking(LocalDateTime timeOfTracking) {
 		this.timeOfTracking = timeOfTracking;
 	}
 	
