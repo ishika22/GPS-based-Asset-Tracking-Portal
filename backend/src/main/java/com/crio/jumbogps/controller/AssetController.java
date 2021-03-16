@@ -1,4 +1,4 @@
-package com.crio.controller;
+package com.crio.jumbogps.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.crio.model.AssetDetail;
-import com.crio.model.AssetHistory;
-import com.crio.repository.AssetDetailRepository;
-import com.crio.repository.AssetHistoryRepository;
+import com.crio.jumbogps.model.AssetDetail;
+import com.crio.jumbogps.model.AssetHistory;
+import com.crio.jumbogps.repository.AssetDetailRepository;
+import com.crio.jumbogps.repository.AssetHistoryRepository;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 

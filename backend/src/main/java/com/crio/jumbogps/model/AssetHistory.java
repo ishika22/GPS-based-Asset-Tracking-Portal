@@ -1,4 +1,4 @@
-package com.crio.model;
+package com.crio.jumbogps.model;
 
 import java.time.LocalDateTime;
 

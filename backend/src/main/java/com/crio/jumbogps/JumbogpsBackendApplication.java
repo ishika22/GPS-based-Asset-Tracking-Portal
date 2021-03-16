@@ -10,9 +10,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
 @SpringBootApplication
-@ComponentScan("com.crio.controller")
-@EnableJpaRepositories("com.crio.repository")
-@EntityScan("com.crio.model")
+@ComponentScan("com.crio.jumbogps.controller")
+@EnableJpaRepositories("com.crio.jumbogps.repository")
+@EntityScan("com.crio.jumbogps.model")
 @EnableSwagger2
 public class JumbogpsBackendApplication {
 
