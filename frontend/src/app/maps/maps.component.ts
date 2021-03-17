@@ -23,7 +23,7 @@ export class MapsComponent implements OnInit {
   options: google.maps.MapOptions = {
     mapTypeId: 'roadmap',
     maxZoom: 18,
-    minZoom: 12 ,
+//     minZoom: 12 , // max zoom-out limit
   }
 
   assetLogs:  any[]  = (data  as  any).default;
