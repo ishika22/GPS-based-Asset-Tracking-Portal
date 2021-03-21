@@ -11,6 +11,7 @@ import { TimeAgoPipe } from 'time-ago-pipe';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule, OWL_DATE_TIME_LOCALE } from '@danielmoncada/angular-datetime-picker';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   FormsModule,
   ReactiveFormsModule,
     OwlNativeDateTimeModule,
-    OwlDateTimeModule
+    OwlDateTimeModule,
+    HttpClientModule
     
   ],
   providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'}],
