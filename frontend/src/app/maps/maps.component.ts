@@ -71,7 +71,7 @@ assetHistoryMarkerIcon={icon:'http://maps.google.com/mapfiles/kml/paddle/ylw-bla
     this.vertices.push(event.latLng.toJSON())
     console.log(this.vertices)
   }
-  openInfo(marker: MapMarker,data:any) {
+  openInfo(marker: MapMarker,data:AssetDetail) {
     const type=data.fkAssetId.fkAssetType.assetType
 
     const name=data.fkAssetId.assetName
@@ -83,13 +83,17 @@ assetHistoryMarkerIcon={icon:'http://maps.google.com/mapfiles/kml/paddle/ylw-bla
     const content = `
       <h2>${name}</h2><p><b>Last seen:</b>${timeAgoString}, ${date}</p>
       <p><b>Type:</b> ${type}<br/><b>Contact Details:</b> ${contactDetails}</p>
-      <button>check history</button>
+      <button (click)="loadHistory(${data.fkAssetId.pkAssetId})">check history</button>
     `
     this.info.options={pixelOffset: new google.maps.Size(0, -30),content}
 
     
     this.info.open(marker)
-    this.backend.getAssetHistory(data.pkAssetId).subscribe((
+
+  }
+
+  loadHistory(id){
+    this.backend.getAssetHistory(id).subscribe((
       points=>this.vertices=points
     ))
   }

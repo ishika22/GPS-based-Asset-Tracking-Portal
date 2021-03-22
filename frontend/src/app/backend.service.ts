@@ -11,11 +11,11 @@ export class BackendService {
   constructor(private http:HttpClient) {
     
    }
-  serverURL='localhost'
+  serverURL='http://localhost:8087'
 
   getAllAssets():Observable<AssetDetail[]>{
     const url = `${this.serverURL}/location/list`;
-    const Assets = of(AssetDetails);//this.http.get<AssetDetails[]>(url)
+    const Assets = this.http.get<AssetDetail[]>(url)  //of(AssetDetails);
 
     return Assets     
   }
