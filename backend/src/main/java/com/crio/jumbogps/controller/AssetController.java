@@ -1,9 +1,13 @@
 package com.crio.jumbogps.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +21,7 @@ import com.crio.jumbogps.model.AssetHistory;
 import com.crio.jumbogps.repository.AssetDetailRepository;
 import com.crio.jumbogps.repository.AssetHistoryRepository;
 
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 @RestController
-@EnableSwagger2
 public class AssetController {
 	
 	@Autowired  
@@ -63,26 +64,41 @@ public class AssetController {
 	
 	
 	@GetMapping("/location/id")
-	public List<AssetHistory> getAAssetsHistoryById(@RequestParam("id") int assetId) {
+	public List<Map<String,Object>> getAAssetsHistoryById(@RequestParam("id") int assetId) {
 		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
+		List<Map<String,Object>> assetHistoryListMap = new ArrayList<Map<String,Object>>();
+		
 		if(assetDetailOptional.isPresent()) {
-			return assetHistoryRepository.getAssetDetailByIdSinceLastDay(assetDetailOptional.get().getPkAssetId());
+			try {
+				List<AssetHistory> assetHistoryList = assetHistoryRepository.getAssetDetailByIdSinceLastDay(assetDetailOptional.get().getPkAssetId());
+				for(AssetHistory assetHistory : assetHistoryList) {
+					Map<String,Object> assetHistoryMap = new HashMap<String,Object>();
+					assetHistoryMap.put("pkAssetHistoryDetailId", assetHistory.getPkAssetHistoryDetailId());
+					assetHistoryMap.put("timeOfTracking", assetHistory.getTimeOfTracking());
+					assetHistoryMap.put("latitude", assetHistory.getLatitude());
+					assetHistoryMap.put("longitude", assetHistory.getLongitude());
+					assetHistoryListMap.add(assetHistoryMap);
+				}
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
+			return assetHistoryListMap;
 		}else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not found");
 		}	
 	}
 	
 	@GetMapping("/location/time")
-	public List<AssetHistory> getAAssetsHistoryByTime(@RequestParam("startTime") String startTime , @RequestParam("endTime") String endTime) {
+	public List<AssetHistory> getAssetsHistoryByTime(@RequestParam("startTime") String startTime , @RequestParam("endTime") String endTime) {
 		
 		try {
-		LocalDateTime start = LocalDateTime.parse(startTime);
-		LocalDateTime end = LocalDateTime.parse(endTime);
-		return assetHistoryRepository.getAssetDetailsByTime(start,end);
+			LocalDateTime start = LocalDateTime.parse(startTime);
+			LocalDateTime end = LocalDateTime.parse(endTime);
+			return assetHistoryRepository.getAssetDetailsByTime(start,end);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return null;
-		
+		return null;	
 	}
+	
 }
