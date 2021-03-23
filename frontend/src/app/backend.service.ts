@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { AssetDetail, Coordinates } from './AssetDetail';
+import { AssetDetail, AssetHistory } from './AssetDetail';
 import { AssetDetails, history } from './maps/mock-data';
 @Injectable({
   providedIn: 'root'
@@ -16,13 +16,12 @@ export class BackendService {
   getAllAssets():Observable<AssetDetail[]>{
     const url = `${this.serverURL}/location/list`;
     const Assets = this.http.get<AssetDetail[]>(url)  //of(AssetDetails);
-
     return Assets     
   }
 
-  getAssetHistory(id:number):Observable<Coordinates[]>{
-    const url = `${this.serverURL}/location/list`;
-    const AssetHistory = of(history);//this.http.get<AssetDetails[]>(url)
+  getAssetHistory(id:number):Observable<AssetHistory[]>{
+    const url = `${this.serverURL}/location/id?id=${id}`;
+    const AssetHistory = this.http.get<AssetHistory[]>(url)
     return AssetHistory;
   }
 

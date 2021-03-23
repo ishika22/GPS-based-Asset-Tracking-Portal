@@ -5,6 +5,7 @@ import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import { BackendService } from '../backend.service';
 import { AssetDetail } from '../AssetDetail';
+import { Subscription } from 'rxjs';
 
 TimeAgo.addDefaultLocale(en)
 
@@ -26,7 +27,7 @@ export class MapsComponent implements OnInit {
     maxZoom: 18,
 //     minZoom: 12 , // max zoom-out limit
   }
-
+  historySubscription: Subscription;
   assetLogs:  AssetDetail[];
   constructor(private pipe : DatePipe,
               private backend:BackendService) {}
@@ -59,16 +60,17 @@ assetHistoryMarkerIcon={icon:'http://maps.google.com/mapfiles/kml/paddle/ylw-bla
             icon: this.icons[i.fkAssetId.fkAssetType.assetType].icon
           },
           data:i
-        }})    
+        }})   
       }
     )   
-    
-    
+
   }
   
   click(event: google.maps.MouseEvent) {
-    console.log(event.latLng.toJSON() )
-    this.vertices.push(event.latLng.toJSON())
+    var s=event.latLng.toJSON()
+    s['timeOfTracking']=new Date().toISOString();
+    s['fk_asset_id']=4
+    this.vertices.push(s)
     console.log(this.vertices)
   }
   openInfo(marker: MapMarker,data:AssetDetail) {
@@ -79,23 +81,32 @@ assetHistoryMarkerIcon={icon:'http://maps.google.com/mapfiles/kml/paddle/ylw-bla
     const date = this.pipe.transform(data.timeOfTracking, 'MMMM d, y, h:mm a');
     const timeAgo = new TimeAgo('en-US')
     const timeAgoString=timeAgo.format(Date.parse(data.timeOfTracking))
-    
-    const content = `
+    const content =`
       <h2>${name}</h2><p><b>Last seen:</b>${timeAgoString}, ${date}</p>
       <p><b>Type:</b> ${type}<br/><b>Contact Details:</b> ${contactDetails}</p>
-      <button (click)="loadHistory(${data.fkAssetId.pkAssetId})">check history</button>
+      <button id='history'">check history</button>
     `
-    this.info.options={pixelOffset: new google.maps.Size(0, -30),content}
+    this.info.options={pixelOffset: new google.maps.Size(0, -30),content}  
 
     
+    this.historySubscription=this.info.domready.subscribe(()=> 
+      document.getElementById(`history`).addEventListener('click',()=>{
+      this.loadHistory(data.fkAssetId.pkAssetId)
+      console.log(1)
+      })
+    );
     this.info.open(marker)
+    
+    
 
   }
 
   loadHistory(id){
     this.backend.getAssetHistory(id).subscribe((
-      points=>this.vertices=points
+      points=>this.vertices=points.map(i=>{return {'lat':i.latitude,'lng':i.longitude}})
     ))
+    this.historySubscription.unsubscribe()
+    document.getElementById(`history`).remove()
   }
   closeClick(){
     this.vertices=[]
