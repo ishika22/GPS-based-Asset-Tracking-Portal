@@ -22,6 +22,7 @@ import com.crio.jumbogps.repository.AssetDetailRepository;
 import com.crio.jumbogps.repository.AssetHistoryRepository;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class AssetController {
 	
 	@Autowired  
@@ -32,7 +33,7 @@ public class AssetController {
 	
 	@GetMapping("/location/list")
 	public List<AssetHistory> getAllAssets() {
-		getCurrentLocationOfAsset();
+// 		getCurrentLocationOfAsset();
 		return assetHistoryRepository.findDistinctByFkAssetIdIn();
 	}
 	
@@ -89,12 +90,14 @@ public class AssetController {
 	}
 	
 	@GetMapping("/location/time")
-	public List<AssetHistory> getAssetsHistoryByTime(@RequestParam("startTime") String startTime , @RequestParam("endTime") String endTime) {
+	public List<AssetHistory> getAssetsHistoryByTime(
+		 @RequestParam("startTime")@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime ,
+		 @RequestParam("endTime")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
 		
 		try {
-			LocalDateTime start = LocalDateTime.parse(startTime);
-			LocalDateTime end = LocalDateTime.parse(endTime);
-			return assetHistoryRepository.getAssetDetailsByTime(start,end);
+			// LocalDateTime start = LocalDateTime.of(date, time)
+			// LocalDateTime end = LocalDateTime.parse(endTime);
+			return assetHistoryRepository.getAssetDetailsByTime(startTime,endTime);;
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
