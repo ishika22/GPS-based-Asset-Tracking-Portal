@@ -99,7 +99,7 @@ public class AssetController {
 		try {
 			// LocalDateTime start = LocalDateTime.of(date, time)
 			// LocalDateTime end = LocalDateTime.parse(endTime);
-			return assetHistoryRepository.getAssetDetailsByTime(startTime,endTime);;
+			return assetHistoryRepository.getAssetDetailsByTime(startTime,endTime);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
