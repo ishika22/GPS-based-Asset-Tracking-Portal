@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -100,6 +99,20 @@ public class AssetController {
 			// LocalDateTime start = LocalDateTime.of(date, time)
 			// LocalDateTime end = LocalDateTime.parse(endTime);
 			return assetHistoryRepository.getAssetDetailsByTime(startTime,endTime);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;	
+	}
+	
+	@GetMapping("/location/time")
+	public List<AssetHistory> getAssetsHistoryByIdAndTime(
+		 @RequestParam("id") int assetId,
+		 @RequestParam("startTime")@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime ,
+		 @RequestParam("endTime")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
+		
+		try {
+			return assetHistoryRepository.getAssetDetailsByIdAndTime(assetId,startTime,endTime);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
