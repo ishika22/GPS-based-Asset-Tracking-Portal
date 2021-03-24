@@ -105,7 +105,7 @@ public class AssetController {
 		return null;	
 	}
 	
-	@GetMapping("/location/time")
+	@GetMapping("/location/time/id")
 	public List<AssetHistory> getAssetsHistoryByIdAndTime(
 		 @RequestParam("id") int assetId,
 		 @RequestParam("startTime")@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime ,
