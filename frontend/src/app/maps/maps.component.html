@@ -15,7 +15,7 @@
     [position]="marker.position"
     [label]="marker.label"
     [options]="marker.options"
-    (mapClick)="openInfo(markerElem,marker.name)"
+    (mapClick)="openInfo(markerElem,marker.data)"
   >
   </map-marker>
   <map-marker
@@ -26,5 +26,6 @@
   </map-marker>
   <map-info-window (closeclick)="closeClick()"></map-info-window>
   <map-polyline [path]="vertices"></map-polyline>
+ 
 </google-map>
 
