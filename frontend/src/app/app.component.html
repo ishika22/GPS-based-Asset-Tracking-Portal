@@ -1,18 +1,46 @@
 <!-- Toolbar -->
 <div class="toolbar" role="banner">
-  <img width="40" alt="Angular Logo"
-    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==" />
+  <img width="30" alt=""
+    src="" />
   <span>Jumbo GPS</span>
-
+  {{selectedType}}
   <div class="spacer"></div>
-  <input class='datetime'  placeholder="Filter By Date Time" [(ngModel)]="date" [owlDateTime]="dt" [owlDateTimeTrigger]="dt" [selectMode]="'range'" >
-  <owl-date-time pickerMode='dialog'  #dt ></owl-date-time>
+  <form>
+    <mat-form-field>
+      <mat-label>Search By ID</mat-label>
+      <input matInput type="text" [(ngModel)]="ID" [ngModelOptions]="{standalone: true}">
+      <button mat-button *ngIf="ID" matSuffix mat-icon-button aria-label="Clear" (click)="ID=''">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-error *ngIf="ID">
+        Email is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field >
+      <mat-label>Filter By Type</mat-label>
+      <mat-select [(value)]="selectedType" (selectionChange)="typeChange()">
+        <mat-option>None</mat-option>
+        <mat-option *ngFor="let type of types" [value]="type.value">{{type.viewValue}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 250px;">
+      <mat-label>Filter By Date Time</mat-label>
+      <input matInput type="text" [(ngModel)]="date" [owlDateTime]="dt" [owlDateTime]="dt" [owlDateTimeTrigger]="dt" [selectMode]="'range'"  [ngModelOptions]="{standalone: true}" (ngModelChange)="dateChange()">
+      <button mat-button *ngIf="date" matSuffix mat-icon-button aria-label="Clear" (click)="date=''">
+        <mat-icon>close</mat-icon>
+      </button>
+      <owl-date-time pickerMode='dialog'  #dt ></owl-date-time>
+    </mat-form-field>
+  </form>
+
 
   
 </div>
 
 <!-- display map remaining entire screen -->
-<app-maps></app-maps>
+
+<app-maps ></app-maps>
 
 
 
