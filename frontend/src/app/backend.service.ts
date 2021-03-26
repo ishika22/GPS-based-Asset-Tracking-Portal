@@ -24,5 +24,14 @@ export class BackendService {
     const AssetHistory = this.http.get<AssetHistory[]>(url)
     return AssetHistory;
   }
-
+  getAssetsByType(typeId:string):Observable<AssetDetail[]>{
+    const url = `${this.serverURL}/location/type?type=${typeId}`;
+    const Assets = this.http.get<AssetDetail[]>(url)
+    return Assets;
+  }
+  getAssetsBetweenTime(start:Date,end:Date):Observable<AssetDetail[]>{
+    const url = `${this.serverURL}/location/time?startTime=${start.toISOString()}&endTime=${end.toISOString()}`;
+    const Assets = this.http.get<AssetDetail[]>(url)
+    return Assets;
+  }
 }

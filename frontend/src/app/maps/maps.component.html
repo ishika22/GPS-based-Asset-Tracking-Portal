@@ -1,31 +1,26 @@
 <google-map   
-
     [options]="options"
     width=100%
     height=91%
     [center]="center"
     [options]="options"
     [zoom]="zoom"
-    (mapClick)="click($event)"
   >
 
     <map-marker
-    #markerElem="mapMarker"
-    *ngFor="let marker of markers"
-    [position]="marker.position"
-    [label]="marker.label"
-    [options]="marker.options"
-    (mapClick)="openInfo(markerElem,marker.data)"
-  >
-  </map-marker>
-  <map-marker
-    *ngFor="let vertice of vertices"
-    [options]=assetHistoryMarkerIcon
-    [position]=vertice
-  >
+      #markerElem="mapMarker"
+      *ngFor="let marker of markers"
+      [position]="marker.position"
+      [options]="marker.options"
+      (mapClick)="openInfo(markerElem,marker.data)"
+    >
+    </map-marker>
+    <map-marker
+      *ngFor="let vertice of vertices"
+      [options]=icons.History
+      [position]=vertice
+    >
   </map-marker>
   <map-info-window (closeclick)="closeClick()"></map-info-window>
   <map-polyline [path]="vertices"></map-polyline>
- 
 </google-map>
-

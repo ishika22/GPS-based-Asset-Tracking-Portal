@@ -12,8 +12,14 @@ import { SearchBoxComponent } from './search-box/search-box.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule, OWL_DATE_TIME_LOCALE } from '@danielmoncada/angular-datetime-picker';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import { ErrorStateMatcher } from '@angular/material/core';
 @NgModule({
+
   declarations: [
     AppComponent,
     MapsComponent,
@@ -28,10 +34,15 @@ import { HttpClientModule } from '@angular/common/http';
   ReactiveFormsModule,
     OwlNativeDateTimeModule,
     OwlDateTimeModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSelectModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatButtonModule
     
   ],
-  providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'}],
+  providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'},ErrorStateMatcher],
   bootstrap: [AppComponent,MapsComponent]
 })
 export class AppModule { }
