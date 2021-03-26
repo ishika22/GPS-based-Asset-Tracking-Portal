@@ -1,7 +1,9 @@
-import { Component, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AssetDetail } from './AssetDetail';
 import { BackendService } from './backend.service';
 import { DataBindingService } from './data-binding.service';
 import { MapsComponent } from './maps/maps.component';
+import { AssetDetails } from './maps/mock-data';
 
 interface Types {
   value: string;
@@ -13,7 +15,7 @@ interface Types {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   @ViewChild(MapsComponent, { static: false }) map: MapsComponent
   constructor(private backend:BackendService,
     private dataService: DataBindingService) {}
@@ -24,21 +26,22 @@ export class AppComponent {
     {value: '1', viewValue: 'Salesperson'},
     {value: '2', viewValue: 'Truck'}
   ]
-  dateChange(){
-    console.log(this.date);
-    
+  dateChange(){    
     if (this.date[0] && this.date[1]){   
       this.backend.getAssetsBetweenTime(this.date[0],this.date[1]).subscribe( (assets)=>{ 
         this.dataService.changeData(assets)
       })    
     }
     else{
-      this.backend.getAllAssets().subscribe( (assets)=>{ 
-        this.dataService.changeData(assets)
-      })    
+      this.backToNormal() 
     }
   }
-
+  assets:AssetDetail[]
+  ngOnInit(){
+    this.backend.getAllAssets().subscribe( (assets)=>{ 
+      this.assets=assets
+    })
+  }
   selectedType:string
   markers=[]
   typeChange(){
@@ -46,5 +49,23 @@ export class AppComponent {
         this.dataService.changeData(assets)
       })
   }
+  
+  backToNormal(){
+    this.backend.getAllAssets().subscribe( (assets)=>{ 
+      this.dataService.changeData(assets)
+    })   
+    this.selectedType=""
+    this.date=[]
+    this.ID=''
+  }
+  filteredData:AssetDetail[]=AssetDetails
   ID:string=''
+  showmarkerWithId(){
+    this.dataService.changeData([])
+    this.assets.forEach(asset => {
+      if (asset.fkAssetId.pkAssetId.toString()==this.ID) {
+        this.dataService.changeData([asset])
+      }
+    });
+  }
 }

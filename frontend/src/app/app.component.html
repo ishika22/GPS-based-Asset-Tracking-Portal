@@ -8,13 +8,11 @@
   <form>
     <mat-form-field>
       <mat-label>Search By ID</mat-label>
-      <input matInput type="text" [(ngModel)]="ID" [ngModelOptions]="{standalone: true}">
+      <input matInput type="text" [(ngModel)]="ID" [ngModelOptions]="{standalone: true}"  (ngModelChange)='showmarkerWithId()'>
       <button mat-button *ngIf="ID" matSuffix mat-icon-button aria-label="Clear" (click)="ID=''">
         <mat-icon>close</mat-icon>
       </button>
-      <mat-error *ngIf="ID">
-        Email is <strong>required</strong>
-      </mat-error>
+
     </mat-form-field>
 
     <mat-form-field >
@@ -32,8 +30,9 @@
       </button>
       <owl-date-time pickerMode='dialog'  #dt ></owl-date-time>
     </mat-form-field>
+    <button style="margin: 10px;" mat-raised-button color="primary" (click)="backToNormal()">Reset </button>
   </form>
-
+  
 
   
 </div>
