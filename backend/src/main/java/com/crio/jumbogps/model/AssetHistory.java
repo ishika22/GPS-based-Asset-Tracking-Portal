@@ -1,5 +1,6 @@
 package com.crio.jumbogps.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -14,8 +15,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "asset_history")
-public class AssetHistory {
+public class AssetHistory implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8881194391917458339L;
 	private Integer pkAssetHistoryDetailId;
 	private AssetDetail fkAssetId;
 	private LocalDateTime timeOfTracking;

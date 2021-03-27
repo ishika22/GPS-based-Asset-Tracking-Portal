@@ -1,5 +1,7 @@
 package com.crio.jumbogps.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,8 +17,12 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "lu_user")
 @Where(clause ="is_active <> 0")
-public class LuUser {
+public class LuUser implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4952425561889424296L;
 	private Integer pkUserId;
 	private String firstName;
 	private String lastName;

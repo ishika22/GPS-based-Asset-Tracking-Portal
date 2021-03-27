@@ -1,5 +1,7 @@
 package com.crio.jumbogps.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,8 +14,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "asset_detail") 
-public class AssetDetail {
+public class AssetDetail implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5949984005434830805L;
 	private Integer pkAssetId;
 	private LuAsset fkAssetType;
 	private String assetName;

@@ -1,5 +1,7 @@
 package com.crio.jumbogps.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,8 +11,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "lu_security_role")
-public class LuSecurityRole {
+public class LuSecurityRole implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5078712183413799071L;
 	private Integer pkSecurityRoleId;
 	private String roleName;
 	
