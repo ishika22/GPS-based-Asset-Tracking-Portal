@@ -10,7 +10,9 @@ import com.crio.jumbogps.model.LuUser;
 
 public interface UserRepository extends JpaRepository<LuUser, Integer>  {
 	
-	@Query("Select user from LuUser user where user.username = :username and user.password = :password and user.fkSecurityRoleId.pkSecurityRoleId = (select pkSecurityRoleId from LuSecurityRole where roleName = 'Administrator')")
-	List<LuUser> findByUsernameAndPassword(@Param("username")String username,@Param("password") String password);
+	@Query("Select user from LuUser user where user.username = :username and user.fkSecurityRoleId.pkSecurityRoleId = (select pkSecurityRoleId from LuSecurityRole where roleName = 'Administrator')")
+	List<LuUser> findByUsernameAndPassword(@Param("username")String username);
+
+	LuUser findByUsername(String username);
 
 }
