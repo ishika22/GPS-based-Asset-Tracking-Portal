@@ -46,7 +46,6 @@ public class UserController {
 	
 	@PostMapping("/user/signup")
 	public HttpStatus saveUser(@RequestBody LuUser newUser) {
-        List<LuUser> existingUsers = userRepository.findAll();
         LuUser user = userRepository.findByUsername(newUser.getUsername());
         if(user!=null) {
             return HttpStatus.CONFLICT;
@@ -65,6 +64,18 @@ public class UserController {
 	
 	private String encryptPassword(String plainTextPassword){
 		return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
+	}
+	
+	@PostMapping("/user/deactiveUser")
+	public HttpStatus deactivateUser(@RequestParam("username") String username) {
+        LuUser user = userRepository.findByUsername(username);
+        if(user == null) {
+        	return HttpStatus.NOT_FOUND;
+        }else {
+        	userRepository.deactiveUser(username);
+        	return HttpStatus.OK;
+        }
+
 	}
 
 }
