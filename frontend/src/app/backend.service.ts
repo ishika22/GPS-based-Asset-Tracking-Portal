@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AssetDetail, AssetHistory } from './AssetDetail';
@@ -33,5 +33,11 @@ export class BackendService {
     const url = `${this.serverURL}/location/time?startTime=${start.toISOString()}&endTime=${end.toISOString()}`;
     const Assets = this.http.get<AssetDetail[]>(url)
     return Assets;
+  }
+  autheticateUser(username:string,password:string):Observable<boolean>{
+    const url = `${this.serverURL}/user/loginUser`;
+    let params = new HttpParams({ fromObject: { 'username': username, 'password': password } });
+    const isValid = this.http.get<boolean>(url,{params})
+    return isValid;
   }
 }
