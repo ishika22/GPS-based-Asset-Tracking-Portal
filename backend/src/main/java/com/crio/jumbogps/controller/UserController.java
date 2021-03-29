@@ -1,18 +1,25 @@
 package com.crio.jumbogps.controller;
 
-import java.util.List;
-
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+//import com.crio.jumbogps.model.AuthenticationRequest;
+import com.crio.jumbogps.model.AuthenticationResponse;
 import com.crio.jumbogps.model.LuUser;
-import com.crio.jumbogps.repository.UserRepository;;
+import com.crio.jumbogps.repository.UserRepository;
+import com.crio.jumbogps.security.JwtUtil;
+import com.crio.jumbogps.service.JwtUserDetailService;;
 
 @RestController
 public class UserController {
@@ -20,28 +27,27 @@ public class UserController {
 	@Autowired  
 	private UserRepository userRepository;
 	
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	
-	@GetMapping(value = "/user/loginUser")
-	public Boolean loginUser(@RequestParam("username") String username, @RequestParam("password") String password) {
-		return userFound(username,password);
-	}
+	@Autowired
+	private JwtUserDetailService userDetailsService;
 	
-	private Boolean userFound(String username, String password) {
-		List<LuUser> userList = userRepository.findByUsernameAndPassword(username);
-		if(userList.size()>0) {
-			LuUser user = userList.get(0);
-			if(validatePassword(password,user.getPassword())) {
-				return true;
-			}
+	@Autowired
+	private JwtUtil jwtUtil;
+	
+	@PostMapping(value = "/user/loginUser")
+	public ResponseEntity<?> loginUser(@RequestBody LuUser luUser) throws Exception{
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(luUser.getUsername(), luUser.getPassword()));
+		}catch(BadCredentialsException e) {
+			throw new Exception("Incorrect Username or Password",e);
 		}
-		return false;
-	}
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(luUser.getUsername());
+		final String jwtToken = jwtUtil.generateToken(userDetails);
 	
-	private Boolean validatePassword(String plainPassword, String hashedPassword) {
-		if (BCrypt.checkpw(plainPassword, hashedPassword)) {
-			return true;
-		}
-		return false;
+		return ResponseEntity.ok(new AuthenticationResponse(jwtToken));
 	}
 	
 	@PostMapping("/user/signup")
@@ -66,7 +72,7 @@ public class UserController {
 		return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
 	}
 	
-	@PostMapping("/user/deactiveUser")
+	@GetMapping("/user/deactiveUser")
 	public HttpStatus deactivateUser(@RequestParam("username") String username) {
         LuUser user = userRepository.findByUsername(username);
         if(user == null) {
