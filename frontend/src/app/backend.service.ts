@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AssetDetail, AssetHistory } from './AssetDetail';
@@ -11,7 +11,13 @@ export class BackendService {
   constructor(private http:HttpClient) {
     
    }
-  serverURL='http://localhost:8087'
+  serverURL='http://localhost:8087';
+  // httpOptions = {
+  //   headers: new HttpHeaders({
+  //     'Content-Type':  'application/json',
+  //     Authorization: "Bearer " + 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpc2hpa2EuYWdhcndhbCIsImV4cCI6MTYxNzA1Mjg5NiwiaWF0IjoxNjE3MDQ5Mjk2fQ.e7PNPX9YvgGbBJTrem8v87TtgbfBioaOTNhpwMHxPR8'
+  //   })
+  // };
 
   getAllAssets():Observable<AssetDetail[]>{
     const url = `${this.serverURL}/location/list`;
@@ -34,10 +40,10 @@ export class BackendService {
     const Assets = this.http.get<AssetDetail[]>(url)
     return Assets;
   }
-  autheticateUser(username:string,password:string):Observable<boolean>{
+  autheticateUser(username:string,password:string):Observable<any>{
     const url = `${this.serverURL}/user/loginUser`;
-    let params = new HttpParams({ fromObject: { 'username': username, 'password': password } });
-    const isValid = this.http.get<boolean>(url,{params})
+    let data = {  username,password };
+    const isValid = this.http.post<any>(url,data)
     return isValid;
   }
 }

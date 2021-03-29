@@ -11,7 +11,7 @@ import { TimeAgoPipe } from 'time-ago-pipe';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule, OWL_DATE_TIME_LOCALE } from '@danielmoncada/angular-datetime-picker';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,6 +20,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
+import { TokenInterceptor } from './token.interceptor';
 @NgModule({
 
   declarations: [
@@ -46,7 +47,11 @@ import { HomeComponent } from './home/home.component';
     MatButtonModule
     
   ],
-  providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'},ErrorStateMatcher],
+  providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'},ErrorStateMatcher,{
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
