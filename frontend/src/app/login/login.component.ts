@@ -14,14 +14,11 @@ export class LoginComponent implements OnInit {
   
   login(){
     this.backend.autheticateUser(this.username,this.password).subscribe(
-      isValid=>{
-        if(isValid){
+      token=>{
+          localStorage.setItem('token', token.token);
           this.router.navigate(['/home'])
-        }
-        else{
-          alert('invalid credentials')
-        }
-      })
+      },
+      err=>alert('invalid credentials'))
   }
   ngOnInit(): void {
   }

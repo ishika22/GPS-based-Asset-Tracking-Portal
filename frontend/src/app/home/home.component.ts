@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { AssetDetail } from '../AssetDetail';
 import { BackendService } from '../backend.service';
 import { DataBindingService } from '../data-binding.service';
@@ -17,8 +18,10 @@ interface Types {
 export class HomeComponent implements OnInit {
   @ViewChild(MapsComponent, { static: false }) map: MapsComponent
   constructor(private backend:BackendService,
-    private dataService: DataBindingService) {}
+    private dataService: DataBindingService,
+    private router: Router) {}
 
+  
   title = 'Jumbo GPS';
   date=[]
   types:Types[]=[
@@ -37,6 +40,9 @@ export class HomeComponent implements OnInit {
   }
   assets:AssetDetail[]
   ngOnInit(){
+    if (!localStorage.getItem('token')) {
+      this.router.navigate(['/login'])
+    }
     this.backend.getAllAssets().subscribe( (assets)=>{ 
       this.assets=assets
     })
