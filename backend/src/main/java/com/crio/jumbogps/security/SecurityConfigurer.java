@@ -43,7 +43,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter{
 		
 		
 
-		http.csrf()
+		http.cors().and().csrf()
 		.disable()
 		.authorizeRequests()
 		.antMatchers(AUTH_WHITELIST)
