@@ -18,12 +18,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './home/home.component';
 @NgModule({
 
   declarations: [
     AppComponent,
     MapsComponent,
-    SearchBoxComponent
+    SearchBoxComponent,
+    LoginComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -43,6 +47,6 @@ import { ErrorStateMatcher } from '@angular/material/core';
     
   ],
   providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'},ErrorStateMatcher],
-  bootstrap: [AppComponent,MapsComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
