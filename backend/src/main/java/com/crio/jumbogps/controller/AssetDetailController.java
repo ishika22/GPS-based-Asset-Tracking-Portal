@@ -47,6 +47,7 @@ public class AssetDetailController {
 		return null;
 	}
 	
+	
 	@GetMapping("/asset/geofenceCheck")
 	private void checkCurrentLocationOfAsset(@RequestParam("id")Integer pkAssetId) {
 		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(pkAssetId);
