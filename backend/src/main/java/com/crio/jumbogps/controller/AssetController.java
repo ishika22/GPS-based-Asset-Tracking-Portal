@@ -12,7 +12,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,21 +37,6 @@ public class AssetController {
 		return assetHistoryRepository.findDistinctByFkAssetIdIn();
 	}
 	
-	@PostMapping("/location/currentList")
-	private void getCurrentLocationOfAsset() {
-		List<AssetDetail> assetDetailList = assetDetailRepository.findAll();
-		for(AssetDetail assetDetail : assetDetailList) {
-		AssetHistory assetHistory = new AssetHistory();
-		double longitude = Math.random() * Math.PI * 2;
-		double latitude = Math.acos(Math.random() * 2 - 1);
-		
-		assetHistory.setFkAssetId(assetDetail);
-		assetHistory.setLatitude(latitude);
-		assetHistory.setLongitude(longitude);
-		assetHistory.setTimeOfTracking(LocalDateTime.now());
-		assetHistoryRepository.save(assetHistory);
-		}
-	}
 	
 	@GetMapping("/location/type")
 	public List<AssetHistory> getAAssetsHistoryByType(@RequestParam("type") int assetType) {

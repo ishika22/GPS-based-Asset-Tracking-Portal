@@ -29,4 +29,7 @@ public interface AssetHistoryRepository extends JpaRepository<AssetHistory, Inte
 	@Query("SELECT assets FROM AssetHistory assets WHERE timeOfTracking >= :startTime and timeOfTracking <= :endTime AND fkAssetId.pkAssetId = :assetId")
 	List<AssetHistory> getAssetDetailsByIdAndTime(int assetId, LocalDateTime startTime, LocalDateTime endTime);
 	
+	@Query("SELECT assets FROM AssetHistory assets WHERE fkAssetId.pkAssetId = :assetId and timeOfTracking IN(SELECT MAX(timeOfTracking) FROM AssetHistory where fkAssetId.pkAssetId = :assetId) ")
+	AssetHistory getCurrentLocationOfAsset(@Param("assetId") Integer pkAssetId);
+	
 }
