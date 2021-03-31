@@ -2,11 +2,9 @@ package com.crio.jumbogps.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,8 +15,6 @@ import com.crio.jumbogps.model.AssetHistory;
 import com.crio.jumbogps.model.LatLang;
 import com.crio.jumbogps.repository.AssetDetailRepository;
 import com.crio.jumbogps.repository.AssetHistoryRepository;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 public class GeofenceController {
