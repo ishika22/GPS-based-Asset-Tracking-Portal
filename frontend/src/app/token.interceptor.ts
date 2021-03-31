@@ -5,10 +5,12 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {catchError} from 'rxjs/operators'; 
+import { Observable, of } from 'rxjs';
+import { Router } from '@angular/router';
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  constructor() {}
+  constructor(private router: Router) {}
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const idToken=localStorage.getItem('token')
     
@@ -19,6 +21,20 @@ export class TokenInterceptor implements HttpInterceptor {
             }
           });
         }
-    return next.handle(request);
+    return next.handle(request).pipe(
+      catchError(
+        (err, caught) => {
+          if (err.status === 403){
+            this.handleAuthError();
+            return of(err);
+          }
+          throw err;
+        }
+      )
+    );
   }
+  private handleAuthError() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  };
 }
