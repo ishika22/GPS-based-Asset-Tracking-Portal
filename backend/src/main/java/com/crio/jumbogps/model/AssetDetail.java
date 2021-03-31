@@ -24,6 +24,9 @@ public class AssetDetail implements Serializable{
 	private LuAsset fkAssetType;
 	private String assetName;
 	private String assetContactDetail;
+	private String geoFencingCoordinates;
+	private String anomalyDetectionCoordinates;
+	
 	
 	@Id 
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -60,5 +63,19 @@ public class AssetDetail implements Serializable{
 		this.assetContactDetail = assetContactDetail;
 	}
 	
-
+	@Column(name = "geo_fencing_coordinates")
+	public String getGeoFencingCoordinates() {
+		return geoFencingCoordinates;
+	}
+	public void setGeoFencingCoordinates(String geoFencingCoordinates) {
+		this.geoFencingCoordinates = geoFencingCoordinates;
+	}
+	
+	@Column(name = "anomaly_detection_coordinates")
+	public String getAnomalyDetectionCoordinates() {
+		return anomalyDetectionCoordinates;
+	}
+	public void setAnomalyDetectionCoordinates(String anomalyDetectionCoordinates) {
+		this.anomalyDetectionCoordinates = anomalyDetectionCoordinates;
+	}
 }

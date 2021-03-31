@@ -1,6 +1,9 @@
 package com.crio.jumbogps.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,35 +14,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.crio.jumbogps.model.AssetDetail;
 import com.crio.jumbogps.model.AssetHistory;
-import com.crio.jumbogps.model.GeofenceCoordinates;
-import com.crio.jumbogps.model.GeofenceLocation;
+import com.crio.jumbogps.model.LatLang;
+import com.crio.jumbogps.repository.AssetDetailRepository;
 import com.crio.jumbogps.repository.AssetHistoryRepository;
-import com.crio.jumbogps.repository.GeofenceRepository;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 public class GeofenceController {
 	
 	@Autowired
 	private AssetHistoryRepository assetHistoryRepository;
 	
 	@Autowired
-	private GeofenceRepository geofenceLocationRepository;
-	
+	private AssetDetailRepository assetDetailRepository;
+
 	double PI = 22/7;
 	
 	@PostMapping(value = "/geofencing/coordinates")
-	public void addGeoFenceCoordinates(@RequestParam GeofenceCoordinates geofenceCoordinates) {
-		for(String geofenceCoordinate : geofenceCoordinates.getCoordinates()) {
-			GeofenceLocation geoFenceLocation = new GeofenceLocation();
-			AssetDetail assetDetail = new AssetDetail();
-			assetDetail.setPkAssetId(geofenceCoordinates.getPkAssetId());
-			geoFenceLocation.setAssetDetail(assetDetail);
-			geoFenceLocation.setLatitude(Double.parseDouble(geofenceCoordinate.split(",")[0]));
-			geoFenceLocation.setLongitude(Double.parseDouble(geofenceCoordinate.split(",")[1]));
-			geofenceLocationRepository.save(geoFenceLocation);
+	public void addGeoFenceCoordinates(@RequestParam("id") Integer assetId,@RequestParam("coordinate") String coordinates) {
+		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
+		if(assetDetailOptional.isPresent()) {
+			AssetDetail assetDetail = assetDetailOptional.get();
+			assetDetail.setGeoFencingCoordinates(coordinates);
+			assetDetailRepository.save(assetDetail);
 		}
 	}
 	
@@ -49,25 +47,30 @@ public class GeofenceController {
 		AssetHistory assetHistory = assetHistoryRepository.getCurrentLocationOfAsset(assetId);
 		Double latitude = assetHistory.getLatitude();
 		Double longitude = assetHistory.getLongitude();
-		List<GeofenceLocation> polygon = geofenceLocationRepository.findByAssetId(assetId);
-		Boolean assetInsidePolygon = containsLocation(latitude, longitude, polygon);
-		if(!assetInsidePolygon) {
-			sendNotification();
+		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
+		if(assetDetailOptional.isPresent()) {
+			AssetDetail assetDetail = assetDetailOptional.get();
+			List<LatLang> polygon = decode(assetDetail.getGeoFencingCoordinates());
+			Boolean assetInsidePolygon = containsLocation(latitude, longitude, polygon);
+			if(!assetInsidePolygon) {
+				sendNotification();
+			}
 		}
+		
 	}
 	
-	private Boolean containsLocation(Double latitude,Double longitude,List<GeofenceLocation> polygon) {
+	private Boolean containsLocation(Double latitude,Double longitude,List<LatLang> polygon) {
 		final int size = polygon.size();
         if (size == 0) {
             return false;
         }
         double lat3 = Math.toRadians(latitude);
         double lng3 = Math.toRadians(longitude);
-        GeofenceLocation prev = polygon.get(size - 1);
+        LatLang prev = polygon.get(size - 1);
         double lat1 = Math.toRadians(prev.getLatitude());
         double lng1 = Math.toRadians(prev.getLongitude());
         int nIntersect = 0;
-        for (GeofenceLocation point2 : polygon) {
+        for (LatLang point2 : polygon) {
             double dLng3 = wrap(lng3 - lng1, -PI, PI);
             if (lat3 == lat1 && dLng3 == 0) {
                 return true;
@@ -126,4 +129,37 @@ public class GeofenceController {
 	private void sendNotification() {
 		System.out.println("Not inside");
 	}
+	
+	public List<LatLang> decode(final String encodedPath) {
+        int len = encodedPath.length();
+        final List<LatLang> path = new ArrayList<LatLang>();
+        int index = 0;
+        int lat = 0;
+        int lng = 0;
+
+        while (index < len) {
+            int result = 1;
+            int shift = 0;
+            int b;
+            do {
+                b = encodedPath.charAt(index++) - 63 - 1;
+                result += b << shift;
+                shift += 5;
+            } while (b >= 0x1f);
+            lat += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+
+            result = 1;
+            shift = 0;
+            do {
+                b = encodedPath.charAt(index++) - 63 - 1;
+                result += b << shift;
+                shift += 5;
+            } while (b >= 0x1f);
+            lng += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+
+            path.add(new LatLang(lat * 1e-5, lng * 1e-5));
+        }
+
+        return path;    
+      }
 }
