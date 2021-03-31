@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { GoogleMap, MapInfoWindow, MapMarker, MapPolygon } from '@angular/google-maps';
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import { BackendService } from '../backend.service';
@@ -15,7 +15,7 @@ TimeAgo.addDefaultLocale(en)
   templateUrl: './maps.component.html',
   styleUrls: ['./maps.component.css']
 })
-export class MapsComponent implements OnInit {
+export class MapsComponent implements OnInit,AfterViewInit {
   @Input() markers=[]
   @ViewChild(GoogleMap, { static: false }) map: GoogleMap
   @ViewChild(MapInfoWindow, { static: false }) info: MapInfoWindow
@@ -44,6 +44,15 @@ export class MapsComponent implements OnInit {
     }
   } 
   vertices: google.maps.LatLngLiteral[] =[]
+  selectedGeofence:MapPolygon
+  drawingManger = new google.maps.drawing.DrawingManager({
+    drawingControl: false,
+    drawingControlOptions: {
+      drawingModes:[ google.maps.drawing.OverlayType.POLYGON],
+    },
+    polygonOptions:{editable:true},
+    drawingMode: google.maps.drawing.OverlayType.POLYGON,
+  });
   
   ngOnInit(): void {
     //set center of map
@@ -54,6 +63,11 @@ export class MapsComponent implements OnInit {
     //plot markers  on map
     this.backend.getAllAssets().subscribe((assets)=>this.convertAndPlotMarkers(assets))
     this.dataService.currentData().subscribe((data)=>this.convertAndPlotMarkers(data))   
+  }
+  
+  ngAfterViewInit(){
+
+
   }
   
   convertAndPlotMarkers(assets:AssetDetail[]){
@@ -102,7 +116,20 @@ export class MapsComponent implements OnInit {
     document.getElementById(`history`).remove()
   }
   closeClick(){
-    this.vertices=[]    
+    this.vertices=[] 
+    this.enableDrawing()   
+  }
+  closeDrawing(){
+    this.drawingManger.setMap(null)
+  }
+  enableDrawing(){
+    this.drawingManger.setMap(this.map.googleMap)
+    google.maps.event.addListenerOnce(this.drawingManger, 'overlaycomplete', (polygon)=> {
+      this.selectedGeofence = polygon;
+      console.log(this.selectedGeofence);
+      this.closeDrawing()
+  });
   }
 
+  
 }
