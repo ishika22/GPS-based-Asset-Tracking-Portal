@@ -27,7 +27,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     maxZoom: 18,
   }
   historySubscription: Subscription;
-  
+  geofenceButtonListner: Subscription;
   constructor(private pipe : DatePipe,
               private backend:BackendService,
               private dataService: DataBindingService) {}
@@ -44,7 +44,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     }
   } 
   vertices: google.maps.LatLngLiteral[] =[]
-  selectedGeofence:MapPolygon
+  selectedGeofence:google.maps.Polygon
   drawingManger = new google.maps.drawing.DrawingManager({
     drawingControl: false,
     drawingControlOptions: {
@@ -95,6 +95,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
       <h2>${name}</h2><p><b>Last seen:</b>${timeAgoString}, ${date}</p>
       <p><b>Type:</b> ${type}<br/><b>Contact Details:</b> ${contactDetails}</p>
       <button id='history'">check history</button>
+      <button id='geofence'">plot geofence</button>
     `
     this.info.options={pixelOffset: new google.maps.Size(0, -30),content}  
 
@@ -104,6 +105,11 @@ export class MapsComponent implements OnInit,AfterViewInit {
         this.loadHistory(data.fkAssetId.pkAssetId)
       })
     );
+    this.geofenceButtonListner=this.info.domready.subscribe(()=> 
+    document.getElementById(`geofence`).addEventListener('click',()=>{
+      this.enableDrawing()
+    },{ once: true })
+  );
     this.info.open(marker)
   }
 
@@ -117,17 +123,29 @@ export class MapsComponent implements OnInit,AfterViewInit {
   }
   closeClick(){
     this.vertices=[] 
-    this.enableDrawing()   
+    this.selectedGeofence.setMap(null)
+    this.closeDrawing()
   }
   closeDrawing(){
     this.drawingManger.setMap(null)
   }
   enableDrawing(){
     this.drawingManger.setMap(this.map.googleMap)
+
+    var element = <HTMLInputElement> document.getElementById(`geofence`);
+    element.disabled = true;
+    element.innerText='submit'
+    element.addEventListener('click',()=>{
+     console.log('submit',this.selectedGeofence.getPath().getArray().toString());
+     element.hidden=true;
+     this.selectedGeofence.setEditable(false)
+    },{ once: true })
+
     google.maps.event.addListenerOnce(this.drawingManger, 'overlaycomplete', (polygon)=> {
-      this.selectedGeofence = polygon;
+      this.selectedGeofence = polygon.overlay;
       console.log(this.selectedGeofence);
       this.closeDrawing()
+      element.disabled = false;
   });
   }
 
