@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.crio.jumbogps.model.AssetDetail;
 import com.crio.jumbogps.model.AssetHistory;
+import com.crio.jumbogps.model.GeofenceCoordinates;
 import com.crio.jumbogps.model.GeofenceLocation;
 import com.crio.jumbogps.repository.AssetHistoryRepository;
 import com.crio.jumbogps.repository.GeofenceRepository;
@@ -29,10 +31,18 @@ public class GeofenceController {
 	double PI = 22/7;
 	
 	@PostMapping(value = "/geofencing/coordinates")
-	public void addGeoFenceCoordinates(@RequestBody GeofenceLocation[] geofenceLocationList) {
-		for(GeofenceLocation geofenceLocation : geofenceLocationList)
-			geofenceLocationRepository.save(geofenceLocation);
+	public void addGeoFenceCoordinates(@RequestParam GeofenceCoordinates geofenceCoordinates) {
+		for(String geofenceCoordinate : geofenceCoordinates.getCoordinates()) {
+			GeofenceLocation geoFenceLocation = new GeofenceLocation();
+			AssetDetail assetDetail = new AssetDetail();
+			assetDetail.setPkAssetId(geofenceCoordinates.getPkAssetId());
+			geoFenceLocation.setAssetDetail(assetDetail);
+			geoFenceLocation.setLatitude(Double.parseDouble(geofenceCoordinate.split(",")[0]));
+			geoFenceLocation.setLongitude(Double.parseDouble(geofenceCoordinate.split(",")[1]));
+			geofenceLocationRepository.save(geoFenceLocation);
+		}
 	}
+	
 	
 	@GetMapping(value = "/asset/geofencing")
 	public void checkAssetInGeofence(@RequestParam("id") Integer assetId) {
