@@ -29,8 +29,9 @@ public class GeofenceController {
 	double PI = 22/7;
 	
 	@PostMapping(value = "/geofencing/coordinates")
-	public void addGeoFenceCoordinates(@RequestBody GeofenceLocation geofenceLocation) {
-		geofenceLocationRepository.save(geofenceLocation);
+	public void addGeoFenceCoordinates(@RequestBody GeofenceLocation[] geofenceLocationList) {
+		for(GeofenceLocation geofenceLocation : geofenceLocationList)
+			geofenceLocationRepository.save(geofenceLocation);
 	}
 	
 	@GetMapping(value = "/asset/geofencing")
