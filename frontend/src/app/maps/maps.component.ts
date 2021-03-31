@@ -103,7 +103,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     this.historySubscription=this.info.domready.subscribe(()=> 
       document.getElementById(`history`).addEventListener('click',()=>{
         this.loadHistory(data.fkAssetId.pkAssetId)
-      })
+      },{ once: true })
     );
     this.geofenceButtonListner=this.info.domready.subscribe(()=> 
     document.getElementById(`geofence`).addEventListener('click',()=>{
@@ -123,7 +123,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
   }
   closeClick(){
     this.vertices=[] 
-    this.selectedGeofence.setMap(null)
+    this.selectedGeofence?.setMap(null)
     this.closeDrawing()
   }
   closeDrawing(){
