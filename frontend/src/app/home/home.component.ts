@@ -73,4 +73,17 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
+  public data: Array<any> = [{
+    text:"Add User",
+  
+}, {
+    text:"Deactivate User",
+}, {
+  text:"Logout",
+  click:()=>{
+    localStorage.removeItem('token');
+    this.router.navigate(['/login'])
+  }
+},];
 }

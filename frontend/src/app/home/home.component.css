@@ -49,7 +49,11 @@
   .toolbar #twitter-logo:hover {
     opacity: 0.8;
   }
-
+ .k-block{
+    background-color:#153352  !important;
+    background-image:linear-gradient(#153352, #153352) !important;
+    color: white !important;
+  } 
   .content {
     margin: 82px auto 32px;
     padding: 0 16px;

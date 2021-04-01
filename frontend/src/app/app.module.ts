@@ -21,6 +21,8 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { TokenInterceptor } from './token.interceptor';
+import { ButtonsModule } from '@progress/kendo-angular-buttons';
+
 @NgModule({
 
   declarations: [
@@ -44,7 +46,8 @@ import { TokenInterceptor } from './token.interceptor';
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    ButtonsModule
     
   ],
   providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'},ErrorStateMatcher,{
