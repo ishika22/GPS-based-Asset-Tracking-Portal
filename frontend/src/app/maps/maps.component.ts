@@ -32,6 +32,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
 
   originInput:HTMLInputElement
   destinationInput:HTMLInputElement
+  routeIndexSelect:HTMLSelectElement
   constructor(private pipe : DatePipe,
               private backend:BackendService,
               private dataService: DataBindingService) {}
@@ -75,6 +76,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     
     this.originInput = document.getElementById("origin-input") as HTMLInputElement;
     this.destinationInput = document.getElementById("destination-input") as HTMLInputElement;
+    this.routeIndexSelect = document.getElementById("routeIndex") as HTMLSelectElement 
     // const submitRoute = document.getElementById("submitRoute") as HTMLInputElement;
     const originAutocomplete = new google.maps.places.Autocomplete(this.originInput,{fields:["place_id"]});
     const destinationAutocomplete = new google.maps.places.Autocomplete(this.destinationInput,{fields:["place_id"]});
@@ -202,7 +204,8 @@ export class MapsComponent implements OnInit,AfterViewInit {
       this.route();
     });
   }
-
+  index=0
+  summrayList:string[]
   route() {
     if (!this.originPlaceId || !this.destinationPlaceId) {
       return;
@@ -220,7 +223,8 @@ export class MapsComponent implements OnInit,AfterViewInit {
         if (status === "OK") {
           me.directionsRenderer.setDirections(response);
           this.directionsRenderer.setMap(this.map.googleMap);
-          console.log(response);
+          this.summrayList=response.routes.map((a)=>a.summary)
+          console.log(this.directionsRenderer);
           const anomalyButton=document.getElementById(`anomaly`) as HTMLInputElement
           anomalyButton.disabled=false
         } else {
@@ -231,19 +235,20 @@ export class MapsComponent implements OnInit,AfterViewInit {
   }
 
   enableRouteInput(){
+    this.summrayList=[]
     if(this.map.controls[google.maps.ControlPosition.TOP_LEFT].getLength()==0){
       this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.originInput)
       this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.destinationInput)
+      this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.routeIndexSelect)
   }
     else{
       this.originInput.hidden=false
       this.destinationInput.hidden=false
+      this.routeIndexSelect.hidden=false
     }
     // const submitRoute = document.getElementById("submitRoute") as HTMLInputElement;
     this.originInput.value=""
-    this.originInput.hidden=false
     this.destinationInput.value=""
-    this.destinationInput.hidden=false
     // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(submitRoute)
 
     const anomalyButton=document.getElementById(`anomaly`) as HTMLInputElement
@@ -261,6 +266,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
   disableRouteInput(){
     this.originInput.hidden=true
     this.destinationInput.hidden=true
+    this.routeIndexSelect.hidden=true
     this.directionsRenderer.setMap(null)
 
   }

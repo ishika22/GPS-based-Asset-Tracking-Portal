@@ -38,5 +38,14 @@
     type="text"
     placeholder="Enter a destination location"
   />
-  <button class="controls" id='submitRoute'>mark route</button>
+  <select [(ngModel)]="index" 
+          id="routeIndex" 
+          class="controls" 
+          (change)="directionsRenderer.setRouteIndex(index)">
+
+    <option *ngFor="let summary of summrayList;index as i" [ngValue]="i" [selected]="i==0">
+      {{summary}}
+    </option>
+  </select>
 </div>
+
