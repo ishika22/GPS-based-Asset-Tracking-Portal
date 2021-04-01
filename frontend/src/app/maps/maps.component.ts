@@ -32,7 +32,6 @@ export class MapsComponent implements OnInit,AfterViewInit {
 
   originInput:HTMLInputElement
   destinationInput:HTMLInputElement
-  selectedPath: google.maps.DirectionsResult;
   constructor(private pipe : DatePipe,
               private backend:BackendService,
               private dataService: DataBindingService) {}
@@ -222,7 +221,6 @@ export class MapsComponent implements OnInit,AfterViewInit {
           me.directionsRenderer.setDirections(response);
           this.directionsRenderer.setMap(this.map.googleMap);
           console.log(response);
-          this.selectedPath=response
           const anomalyButton=document.getElementById(`anomaly`) as HTMLInputElement
           anomalyButton.disabled=false
         } else {
@@ -252,7 +250,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     anomalyButton.disabled = true
     anomalyButton.innerText='submit route'
     anomalyButton.addEventListener('click',()=>{
-      console.log('submit',this.selectedPath.routes[0].overview_polyline);
+      console.log('submit',this.directionsRenderer.getDirections().routes[this.directionsRenderer.getRouteIndex()].overview_polyline);
       anomalyButton.hidden=true
       console.log(this.directionsRenderer);
       
