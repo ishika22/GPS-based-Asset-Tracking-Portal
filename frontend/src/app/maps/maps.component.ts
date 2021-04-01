@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { GoogleMap, MapInfoWindow, MapMarker, MapPolygon } from '@angular/google-maps';
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import { BackendService } from '../backend.service';
@@ -15,7 +15,7 @@ TimeAgo.addDefaultLocale(en)
   templateUrl: './maps.component.html',
   styleUrls: ['./maps.component.css']
 })
-export class MapsComponent implements OnInit {
+export class MapsComponent implements OnInit,AfterViewInit {
   @Input() markers=[]
   @ViewChild(GoogleMap, { static: false }) map: GoogleMap
   @ViewChild(MapInfoWindow, { static: false }) info: MapInfoWindow
@@ -27,7 +27,7 @@ export class MapsComponent implements OnInit {
     maxZoom: 18,
   }
   historySubscription: Subscription;
-  
+  geofenceButtonListner: Subscription;
   constructor(private pipe : DatePipe,
               private backend:BackendService,
               private dataService: DataBindingService) {}
@@ -44,6 +44,15 @@ export class MapsComponent implements OnInit {
     }
   } 
   vertices: google.maps.LatLngLiteral[] =[]
+  selectedGeofence:google.maps.Polygon
+  drawingManger = new google.maps.drawing.DrawingManager({
+    drawingControl: false,
+    drawingControlOptions: {
+      drawingModes:[ google.maps.drawing.OverlayType.POLYGON],
+    },
+    polygonOptions:{editable:true},
+    drawingMode: google.maps.drawing.OverlayType.POLYGON,
+  });
   
   ngOnInit(): void {
     //set center of map
@@ -54,6 +63,11 @@ export class MapsComponent implements OnInit {
     //plot markers  on map
     this.backend.getAllAssets().subscribe((assets)=>this.convertAndPlotMarkers(assets))
     this.dataService.currentData().subscribe((data)=>this.convertAndPlotMarkers(data))   
+  }
+  
+  ngAfterViewInit(){
+
+
   }
   
   convertAndPlotMarkers(assets:AssetDetail[]){
@@ -81,6 +95,7 @@ export class MapsComponent implements OnInit {
       <h2>${name}</h2><p><b>Last seen:</b>${timeAgoString}, ${date}</p>
       <p><b>Type:</b> ${type}<br/><b>Contact Details:</b> ${contactDetails}</p>
       <button id='history'">check history</button>
+      <button id='geofence'">plot geofence</button>
     `
     this.info.options={pixelOffset: new google.maps.Size(0, -30),content}  
 
@@ -88,8 +103,13 @@ export class MapsComponent implements OnInit {
     this.historySubscription=this.info.domready.subscribe(()=> 
       document.getElementById(`history`).addEventListener('click',()=>{
         this.loadHistory(data.fkAssetId.pkAssetId)
-      })
+      },{ once: true })
     );
+    this.geofenceButtonListner=this.info.domready.subscribe(()=> 
+    document.getElementById(`geofence`).addEventListener('click',()=>{
+      this.enableDrawing()
+    },{ once: true })
+  );
     this.info.open(marker)
   }
 
@@ -102,7 +122,32 @@ export class MapsComponent implements OnInit {
     document.getElementById(`history`).remove()
   }
   closeClick(){
-    this.vertices=[]    
+    this.vertices=[] 
+    this.selectedGeofence?.setMap(null)
+    this.closeDrawing()
+  }
+  closeDrawing(){
+    this.drawingManger.setMap(null)
+  }
+  enableDrawing(){
+    this.drawingManger.setMap(this.map.googleMap)
+
+    var element = <HTMLInputElement> document.getElementById(`geofence`);
+    element.disabled = true;
+    element.innerText='submit'
+    element.addEventListener('click',()=>{
+     console.log('submit',this.selectedGeofence.getPath().getArray().toString());
+     element.hidden=true;
+     this.selectedGeofence.setEditable(false)
+    },{ once: true })
+
+    google.maps.event.addListenerOnce(this.drawingManger, 'overlaycomplete', (polygon)=> {
+      this.selectedGeofence = polygon.overlay;
+      console.log(this.selectedGeofence);
+      this.closeDrawing()
+      element.disabled = false;
+  });
   }
 
+  
 }
