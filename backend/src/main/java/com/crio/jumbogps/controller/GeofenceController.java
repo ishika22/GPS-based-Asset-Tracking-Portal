@@ -1,15 +1,16 @@
 package com.crio.jumbogps.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.crio.jumbogps.Notification.NotificationSender;
 import com.crio.jumbogps.model.AssetDetail;
 import com.crio.jumbogps.model.AssetHistory;
 import com.crio.jumbogps.model.LatLang;
@@ -17,6 +18,7 @@ import com.crio.jumbogps.repository.AssetDetailRepository;
 import com.crio.jumbogps.repository.AssetHistoryRepository;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class GeofenceController {
 	
 	@Autowired
@@ -24,8 +26,11 @@ public class GeofenceController {
 	
 	@Autowired
 	private AssetDetailRepository assetDetailRepository;
+	
+	@Autowired
+	private NotificationSender notificationSender;
 
-	double PI = 22/7;
+	private double PI = 22/7;
 	
 	@PostMapping(value = "/geofencing/coordinates")
 	public void addGeoFenceCoordinates(@RequestParam("id") Integer assetId,@RequestParam("coordinate") String coordinates) {
@@ -46,10 +51,10 @@ public class GeofenceController {
 		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
 		if(assetDetailOptional.isPresent()) {
 			AssetDetail assetDetail = assetDetailOptional.get();
-			List<LatLang> polygon = decode(assetDetail.getGeoFencingCoordinates());
+			List<LatLang> polygon = notificationSender.decodeCoordinates(assetDetail.getGeoFencingCoordinates());
 			Boolean assetInsidePolygon = containsLocation(latitude, longitude, polygon);
 			if(!assetInsidePolygon) {
-				sendNotification();
+				notificationSender.sendNotification();
 			}
 		}
 		
@@ -122,40 +127,4 @@ public class GeofenceController {
 		return (n>=min && n<max)? n : (((n-min)%(max-min))+min);
 	}
 
-	private void sendNotification() {
-		System.out.println("Not inside");
-	}
-	
-	public List<LatLang> decode(final String encodedPath) {
-        int len = encodedPath.length();
-        final List<LatLang> path = new ArrayList<LatLang>();
-        int index = 0;
-        int lat = 0;
-        int lng = 0;
-
-        while (index < len) {
-            int result = 1;
-            int shift = 0;
-            int b;
-            do {
-                b = encodedPath.charAt(index++) - 63 - 1;
-                result += b << shift;
-                shift += 5;
-            } while (b >= 0x1f);
-            lat += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
-
-            result = 1;
-            shift = 0;
-            do {
-                b = encodedPath.charAt(index++) - 63 - 1;
-                result += b << shift;
-                shift += 5;
-            } while (b >= 0x1f);
-            lng += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
-
-            path.add(new LatLang(lat * 1e-5, lng * 1e-5));
-        }
-
-        return path;    
-      }
 }
