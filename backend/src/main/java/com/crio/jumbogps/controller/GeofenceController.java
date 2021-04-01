@@ -1,6 +1,7 @@
 package com.crio.jumbogps.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -9,12 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.crio.jumbogps.Notification.NotificationSender;
+import com.crio.jumbogps.model.AssetDetail;
 import com.crio.jumbogps.model.AssetHistory;
-import com.crio.jumbogps.model.GeofenceLocation;
+import com.crio.jumbogps.model.LatLang;
+import com.crio.jumbogps.repository.AssetDetailRepository;
 import com.crio.jumbogps.repository.AssetHistoryRepository;
-import com.crio.jumbogps.repository.GeofenceRepository;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -24,40 +25,53 @@ public class GeofenceController {
 	private AssetHistoryRepository assetHistoryRepository;
 	
 	@Autowired
-	private GeofenceRepository geofenceLocationRepository;
+	private AssetDetailRepository assetDetailRepository;
 	
-	double PI = 22/7;
+	@Autowired
+	private NotificationSender notificationSender;
+
+	private double PI = 22/7;
 	
 	@PostMapping(value = "/geofencing/coordinates")
-	public void addGeoFenceCoordinates(@RequestBody GeofenceLocation[] geofenceLocationList) {
-		for(GeofenceLocation geofenceLocation : geofenceLocationList)
-			geofenceLocationRepository.save(geofenceLocation);
+	public void addGeoFenceCoordinates(@RequestParam("id") Integer assetId,@RequestParam("coordinate") String coordinates) {
+		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
+		if(assetDetailOptional.isPresent()) {
+			AssetDetail assetDetail = assetDetailOptional.get();
+			assetDetail.setGeoFencingCoordinates(coordinates);
+			assetDetailRepository.save(assetDetail);
+		}
 	}
+	
 	
 	@GetMapping(value = "/asset/geofencing")
 	public void checkAssetInGeofence(@RequestParam("id") Integer assetId) {
 		AssetHistory assetHistory = assetHistoryRepository.getCurrentLocationOfAsset(assetId);
 		Double latitude = assetHistory.getLatitude();
 		Double longitude = assetHistory.getLongitude();
-		List<GeofenceLocation> polygon = geofenceLocationRepository.findByAssetId(assetId);
-		Boolean assetInsidePolygon = containsLocation(latitude, longitude, polygon);
-		if(!assetInsidePolygon) {
-			sendNotification();
+		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
+		if(assetDetailOptional.isPresent()) {
+			AssetDetail assetDetail = assetDetailOptional.get();
+			List<LatLang> polygon = notificationSender.decodeCoordinates(assetDetail.getGeoFencingCoordinates());
+			Boolean assetInsidePolygon = containsLocation(latitude, longitude, polygon);
+			if(!assetInsidePolygon) {
+				notificationSender.sendNotification();
+			}
 		}
+		
 	}
 	
-	private Boolean containsLocation(Double latitude,Double longitude,List<GeofenceLocation> polygon) {
+	private Boolean containsLocation(Double latitude,Double longitude,List<LatLang> polygon) {
 		final int size = polygon.size();
         if (size == 0) {
             return false;
         }
         double lat3 = Math.toRadians(latitude);
         double lng3 = Math.toRadians(longitude);
-        GeofenceLocation prev = polygon.get(size - 1);
+        LatLang prev = polygon.get(size - 1);
         double lat1 = Math.toRadians(prev.getLatitude());
         double lng1 = Math.toRadians(prev.getLongitude());
         int nIntersect = 0;
-        for (GeofenceLocation point2 : polygon) {
+        for (LatLang point2 : polygon) {
             double dLng3 = wrap(lng3 - lng1, -PI, PI);
             if (lat3 == lat1 && dLng3 == 0) {
                 return true;
@@ -113,7 +127,4 @@ public class GeofenceController {
 		return (n>=min && n<max)? n : (((n-min)%(max-min))+min);
 	}
 
-	private void sendNotification() {
-		System.out.println("Not inside");
-	}
 }
