@@ -4,7 +4,7 @@
     height=91%
     [center]="center"
     [options]="options"
-    [zoom]="zoom"
+    [zoom]="12"
   >
 
     <map-marker
@@ -24,3 +24,19 @@
   <map-info-window (closeclick)="closeClick()"></map-info-window>
   <map-polyline [path]="vertices"></map-polyline>
 </google-map>
+<div style="display: none">
+  <input
+    id="origin-input"
+    class="controls"
+    type="text"
+    placeholder="Enter an origin location"
+  />
+
+  <input
+    id="destination-input"
+    class="controls"
+    type="text"
+    placeholder="Enter a destination location"
+  />
+  <button class="controls" id='submitRoute'>mark route</button>
+</div>

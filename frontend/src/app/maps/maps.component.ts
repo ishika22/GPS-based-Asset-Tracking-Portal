@@ -20,14 +20,19 @@ export class MapsComponent implements OnInit,AfterViewInit {
   @ViewChild(GoogleMap, { static: false }) map: GoogleMap
   @ViewChild(MapInfoWindow, { static: false }) info: MapInfoWindow
 
-  zoom=12
   center: google.maps.LatLngLiteral
   options: google.maps.MapOptions = {
     mapTypeId: 'roadmap',
     maxZoom: 18,
   }
+
   historySubscription: Subscription;
   geofenceButtonListner: Subscription;
+  anomalyButton:Subscription
+
+  originInput:HTMLInputElement
+  destinationInput:HTMLInputElement
+  selectedPath: google.maps.DirectionsResult;
   constructor(private pipe : DatePipe,
               private backend:BackendService,
               private dataService: DataBindingService) {}
@@ -43,7 +48,8 @@ export class MapsComponent implements OnInit,AfterViewInit {
       icon:'http://maps.google.com/mapfiles/kml/paddle/ylw-blank-lv.png'
     }
   } 
-  vertices: google.maps.LatLngLiteral[] =[]
+  
+  
   selectedGeofence:google.maps.Polygon
   drawingManger = new google.maps.drawing.DrawingManager({
     drawingControl: false,
@@ -67,7 +73,20 @@ export class MapsComponent implements OnInit,AfterViewInit {
   
   ngAfterViewInit(){
 
-
+    
+    this.originInput = document.getElementById("origin-input") as HTMLInputElement;
+    this.destinationInput = document.getElementById("destination-input") as HTMLInputElement;
+    // const submitRoute = document.getElementById("submitRoute") as HTMLInputElement;
+    const originAutocomplete = new google.maps.places.Autocomplete(this.originInput,{fields:["place_id"]});
+    const destinationAutocomplete = new google.maps.places.Autocomplete(this.destinationInput,{fields:["place_id"]});
+    // submitRoute.hidden=true
+    
+    console.log(this.map.controls);
+    
+    // originInput.hidden=true
+    // destinationInput.hidden=true
+      this.setupPlaceChangedListener(originAutocomplete, "ORIG");
+    this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
   }
   
   convertAndPlotMarkers(assets:AssetDetail[]){
@@ -83,7 +102,8 @@ export class MapsComponent implements OnInit,AfterViewInit {
         data:i
       }})   
   }
-
+  
+  vertices: google.maps.LatLngLiteral[] =[]
   openInfo(marker: MapMarker,data:AssetDetail) {
     const type=data.fkAssetId.fkAssetType.assetType
     const name=data.fkAssetId.assetName
@@ -96,6 +116,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
       <p><b>Type:</b> ${type}<br/><b>Contact Details:</b> ${contactDetails}</p>
       <button id='history'">check history</button>
       <button id='geofence'">plot geofence</button>
+      <button id='anomaly'">mark route</button>
     `
     this.info.options={pixelOffset: new google.maps.Size(0, -30),content}  
 
@@ -108,6 +129,11 @@ export class MapsComponent implements OnInit,AfterViewInit {
     this.geofenceButtonListner=this.info.domready.subscribe(()=> 
     document.getElementById(`geofence`).addEventListener('click',()=>{
       this.enableDrawing()
+    },{ once: true })
+  );
+  this.anomalyButton=this.info.domready.subscribe(()=> 
+    document.getElementById(`anomaly`).addEventListener('click',()=>{
+      this.enableRouteInput()
     },{ once: true })
   );
     this.info.open(marker)
@@ -125,6 +151,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     this.vertices=[] 
     this.selectedGeofence?.setMap(null)
     this.closeDrawing()
+    this.disableRouteInput()
   }
   closeDrawing(){
     this.drawingManger.setMap(null)
@@ -136,7 +163,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     element.disabled = true;
     element.innerText='submit'
     element.addEventListener('click',()=>{
-     console.log('submit',this.selectedGeofence.getPath().getArray().toString());
+     console.log('submit',google.maps.geometry.encoding.encodePath(this.selectedGeofence.getPath()));
      element.hidden=true;
      this.selectedGeofence.setEditable(false)
     },{ once: true })
@@ -149,5 +176,97 @@ export class MapsComponent implements OnInit,AfterViewInit {
   });
   }
 
+  //Route plotting
+  originPlaceId: string="";
+  destinationPlaceId: string="";
+  directionsService: google.maps.DirectionsService= new google.maps.DirectionsService();
+  directionsRenderer: google.maps.DirectionsRenderer= new google.maps.DirectionsRenderer();
+  setupPlaceChangedListener(
+    autocomplete: google.maps.places.Autocomplete,
+    mode: string
+  ) {
+    autocomplete.bindTo("bounds", this.map.googleMap);
+
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+
+      if (!place.place_id) {
+        window.alert("Please select an option from the dropdown list.");
+        return;
+      }
+
+      if (mode === "ORIG") {
+        this.originPlaceId = place.place_id;
+      } else {
+        this.destinationPlaceId = place.place_id;
+      }
+      this.route();
+    });
+  }
+
+  route() {
+    if (!this.originPlaceId || !this.destinationPlaceId) {
+      return;
+    }
+    const me = this;
+
+    this.directionsService.route(
+      {
+        origin: { placeId: this.originPlaceId },
+        destination: { placeId: this.destinationPlaceId },
+        travelMode: google.maps.TravelMode.DRIVING,
+        provideRouteAlternatives:true
+      },
+      (response, status) => {
+        if (status === "OK") {
+          me.directionsRenderer.setDirections(response);
+          this.directionsRenderer.setMap(this.map.googleMap);
+          console.log(response);
+          this.selectedPath=response
+          const anomalyButton=document.getElementById(`anomaly`) as HTMLInputElement
+          anomalyButton.disabled=false
+        } else {
+          window.alert("Directions request failed due to " + status);
+        }
+      }
+    );
+  }
+
+  enableRouteInput(){
+    if(this.map.controls[google.maps.ControlPosition.TOP_LEFT].getLength()==0){
+      this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.originInput)
+      this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.destinationInput)
+  }
+    else{
+      this.originInput.hidden=false
+      this.destinationInput.hidden=false
+    }
+    // const submitRoute = document.getElementById("submitRoute") as HTMLInputElement;
+    this.originInput.value=""
+    this.originInput.hidden=false
+    this.destinationInput.value=""
+    this.destinationInput.hidden=false
+    // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(submitRoute)
+
+    const anomalyButton=document.getElementById(`anomaly`) as HTMLInputElement
+    anomalyButton.disabled = true
+    anomalyButton.innerText='submit route'
+    anomalyButton.addEventListener('click',()=>{
+      console.log('submit',this.selectedPath.routes[0].overview_polyline);
+      anomalyButton.hidden=true
+      console.log(this.directionsRenderer);
+      
+      this.disableRouteInput()
+     },{ once: true })
+     
+  }
+  disableRouteInput(){
+    this.originInput.hidden=true
+    this.destinationInput.hidden=true
+    this.directionsRenderer.setMap(null)
+
+  }
+  
+  
   
 }
