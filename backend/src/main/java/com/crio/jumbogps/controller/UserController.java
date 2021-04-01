@@ -1,5 +1,7 @@
 package com.crio.jumbogps.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,13 +10,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-//import com.crio.jumbogps.model.AuthenticationRequest;
 import com.crio.jumbogps.model.AuthenticationResponse;
 import com.crio.jumbogps.model.LuUser;
 import com.crio.jumbogps.repository.UserRepository;
@@ -22,6 +22,7 @@ import com.crio.jumbogps.security.JwtUtil;
 import com.crio.jumbogps.service.JwtUserDetailService;;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 	
 	@Autowired  
@@ -73,7 +74,15 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/deactiveUser")
-	public HttpStatus deactivateUser(@RequestParam("username") String username) {
+	public HttpStatus deactivateUser(HttpServletRequest request) {
+		final String authorizationHeader = request.getHeader("Authorization");
+		String username = null;
+		String jwtToken = null;
+		
+		if(authorizationHeader!=null && authorizationHeader.startsWith("Bearer ")) {
+			jwtToken = authorizationHeader.substring(7);
+			username = jwtUtil.getUsernameFromToken(jwtToken);
+		}
         LuUser user = userRepository.findByUsername(username);
         if(user == null) {
         	return HttpStatus.NOT_FOUND;
