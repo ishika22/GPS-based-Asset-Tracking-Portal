@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.crio.jumbogps.model.AssetDetail;
 import com.crio.jumbogps.model.AssetHistory;
 import com.crio.jumbogps.repository.AssetDetailRepository;
@@ -39,8 +38,11 @@ public class AssetController {
 	
 	
 	@GetMapping("/location/type")
-	public List<AssetHistory> getAAssetsHistoryByType(@RequestParam("type") int assetType) {
-		return assetHistoryRepository.getAssetDetailByType(assetType);
+	public List<AssetHistory> getAAssetsHistoryByType(@RequestParam("type") String assetType) {
+		if(assetType == null || assetType.contentEquals("undefined")){
+			return getAllAssets();
+		}
+		return assetHistoryRepository.getAssetDetailByType(Integer.parseInt(assetType));
 	}
 	
 	@GetMapping("/location/activeTodayList")
