@@ -236,10 +236,10 @@ export class MapsComponent implements OnInit,AfterViewInit {
 
   enableRouteInput(){
     this.summrayList=[]
-    if(this.map.controls[google.maps.ControlPosition.TOP_LEFT].getLength()==0){
-      this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.originInput)
-      this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.destinationInput)
-      this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(this.routeIndexSelect)
+    if(this.map.controls[google.maps.ControlPosition.LEFT_TOP].getLength()==0){
+      this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(this.originInput)
+      this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(this.destinationInput)
+      this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(this.routeIndexSelect)
   }
     else{
       this.originInput.hidden=false
