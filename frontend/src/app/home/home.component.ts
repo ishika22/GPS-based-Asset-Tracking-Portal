@@ -11,6 +11,7 @@ interface Types {
   viewValue: string;
 }
 interface DialogData {
+  title:string
   username: string;
   password: string;
 }
@@ -79,20 +80,19 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-  username: string;
-  password: string;
-  dialogService (){
+  dialogService (title){
     this.dialog.open(Dialog, {
       width: '250px',
-      data: {username: this.username, password: this.password}
+      data: {username: "", password: "",title}
     }).afterClosed().subscribe(result => {
       console.log('The dialog was closed',result);
     });
   }
   public data: Array<any> = [{
     text:"Add User",
-    click:()=> this.dialogService()}, {
+    click:()=> this.dialogService('Add new user')}, {
         text:"Deactivate User",
+        click:()=> this.dialogService('Deactivate User')
     }, {
       text:"Logout",
       click:()=>{
