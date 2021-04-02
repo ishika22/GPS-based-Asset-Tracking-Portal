@@ -35,7 +35,7 @@ public class AnomalyDetectionController {
 
 	static final double PI = 22 / 7;
 
-	@PostMapping(value = "/anomaly/coordinates")
+	@GetMapping(value = "/anomaly/coordinates")
 	public void addGeoFenceCoordinates(@RequestParam("id") Integer assetId,
 			@RequestParam("coordinate") String coordinates) {
 		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);

@@ -32,7 +32,7 @@ public class GeofenceController {
 
 	private double PI = 22/7;
 	
-	@PostMapping(value = "/geofencing/coordinates")
+	@GetMapping(value = "/geofencing/coordinates")
 	public void addGeoFenceCoordinates(@RequestParam("id") Integer assetId,@RequestParam("coordinate") String coordinates) {
 		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
 		if(assetDetailOptional.isPresent()) {
