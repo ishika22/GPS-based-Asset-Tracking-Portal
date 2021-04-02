@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.json.JSONObject;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.json.JSONException;
 import com.crio.jumbogps.Notification.NotificationSender;
 import com.crio.jumbogps.model.AssetDetail;
 import com.crio.jumbogps.model.AssetHistory;
@@ -32,12 +34,12 @@ public class GeofenceController {
 
 	private double PI = 22/7;
 	
-	@GetMapping(value = "/geofencing/coordinates")
-	public void addGeoFenceCoordinates(@RequestParam("id") Integer assetId,@RequestParam("coordinate") String coordinates) {
-		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
+	@PostMapping(value = "/geofencing/coordinates")
+	public void addGeoFenceCoordinates(@RequestBody JSONObject assetDetails) throws JSONException {
+		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(Integer.parseInt(assetDetails.get("id").toString()));
 		if(assetDetailOptional.isPresent()) {
 			AssetDetail assetDetail = assetDetailOptional.get();
-			assetDetail.setGeoFencingCoordinates(coordinates);
+			assetDetail.setGeoFencingCoordinates(assetDetails.get("coordinates").toString());
 			assetDetailRepository.save(assetDetail);
 		}
 	}
