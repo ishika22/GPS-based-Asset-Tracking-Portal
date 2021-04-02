@@ -35,11 +35,11 @@ public class GeofenceController {
 	private double PI = 22/7;
 	
 	@PostMapping(value = "/geofencing/coordinates")
-	public void addGeoFenceCoordinates(@RequestBody JSONObject assetDetails) throws JSONException {
-		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(Integer.parseInt(assetDetails.get("id").toString()));
+	public void addGeoFenceCoordinates(@RequestBody AssetDetail assetDetails) throws JSONException {
+		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetDetails.getPkAssetId());
 		if(assetDetailOptional.isPresent()) {
 			AssetDetail assetDetail = assetDetailOptional.get();
-			assetDetail.setGeoFencingCoordinates(assetDetails.get("coordinates").toString());
+			assetDetail.setGeoFencingCoordinates(assetDetails.getGeoFencingCoordinates());
 			assetDetailRepository.save(assetDetail);
 		}
 	}
