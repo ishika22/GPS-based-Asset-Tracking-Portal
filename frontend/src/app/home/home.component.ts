@@ -1,13 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AssetDetail } from '../AssetDetail';
 import { BackendService } from '../backend.service';
 import { DataBindingService } from '../data-binding.service';
 import { MapsComponent } from '../maps/maps.component';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 interface Types {
   value: string;
   viewValue: string;
+}
+interface DialogData {
+  username: string;
+  password: string;
 }
 
 @Component({
@@ -19,7 +24,8 @@ export class HomeComponent implements OnInit {
   @ViewChild(MapsComponent, { static: false }) map: MapsComponent
   constructor(private backend:BackendService,
     private dataService: DataBindingService,
-    private router: Router) {}
+    private router: Router,
+    public dialog: MatDialog) {}
 
   
   title = 'Jumbo GPS';
@@ -73,17 +79,41 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-
+  username: string;
+  password: string;
+  dialogService (){
+    this.dialog.open(Dialog, {
+      width: '250px',
+      data: {username: this.username, password: this.password}
+    }).afterClosed().subscribe(result => {
+      console.log('The dialog was closed',result);
+    });
+  }
   public data: Array<any> = [{
     text:"Add User",
-  
-}, {
-    text:"Deactivate User",
-}, {
-  text:"Logout",
-  click:()=>{
-    localStorage.removeItem('token');
-    this.router.navigate(['/login'])
+    click:()=> this.dialogService()}, {
+        text:"Deactivate User",
+    }, {
+      text:"Logout",
+      click:()=>{
+        localStorage.removeItem('token');
+        this.router.navigate(['/login'])
+      }
+    },];
+    
+}
+@Component({
+  selector: 'dialog-box',
+  templateUrl: 'dialog.component.html',
+})
+export class Dialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<Dialog>,
+    @Inject(MAT_DIALOG_DATA) public data:DialogData) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
-},];
+
 }

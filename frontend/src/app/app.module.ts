@@ -19,9 +19,10 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
+import { Dialog, HomeComponent } from './home/home.component';
 import { TokenInterceptor } from './token.interceptor';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog'
 
 @NgModule({
 
@@ -30,7 +31,8 @@ import { ButtonsModule } from '@progress/kendo-angular-buttons';
     MapsComponent,
     SearchBoxComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    Dialog
   ],
   imports: [
     BrowserModule,
@@ -47,7 +49,8 @@ import { ButtonsModule } from '@progress/kendo-angular-buttons';
     MatFormFieldModule,
     MatIconModule,
     MatButtonModule,
-    ButtonsModule
+    ButtonsModule,
+    MatDialogModule
     
   ],
   providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'},ErrorStateMatcher,{
@@ -55,6 +58,7 @@ import { ButtonsModule } from '@progress/kendo-angular-buttons';
     useClass: TokenInterceptor,
     multi: true
   }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[Dialog]
 })
 export class AppModule { }
