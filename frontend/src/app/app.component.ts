@@ -4,6 +4,7 @@ import { BackendService } from './backend.service';
 import { DataBindingService } from './data-binding.service';
 import { MapsComponent } from './maps/maps.component';
 import { AssetDetails } from './maps/mock-data';
+import { MessagingService } from './service/messaging.service';
 
 interface Types {
   value: string;
@@ -18,7 +19,8 @@ interface Types {
 export class AppComponent implements OnInit{
   @ViewChild(MapsComponent, { static: false }) map: MapsComponent
   constructor(private backend:BackendService,
-    private dataService: DataBindingService) {}
+    private dataService: DataBindingService,
+    private messagingService: MessagingService) {}
 
   title = 'Jumbo GPS';
   date=[]
@@ -37,10 +39,14 @@ export class AppComponent implements OnInit{
     }
   }
   assets:AssetDetail[]
+  message
   ngOnInit(){
     this.backend.getAllAssets().subscribe( (assets)=>{ 
       this.assets=assets
     })
+    this.messagingService.requestPermission()
+  this.messagingService.receiveMessage()
+  this.message = this.messagingService.currentMessage
   }
   selectedType:string
   markers=[]
@@ -68,4 +74,6 @@ export class AppComponent implements OnInit{
       }
     });
   }
+
+  
 }
