@@ -19,9 +19,12 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
+import { Dialog, HomeComponent } from './home/home.component';
 import { TokenInterceptor } from './token.interceptor';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
+
+import {MatDialog, MatDialogModule} from '@angular/material/dialog'
+
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -30,6 +33,7 @@ import { MessagingService } from './service/messaging.service';
 import { environment } from '../environments/environment';
 import { AsyncPipe } from '../../node_modules/@angular/common';
 
+
 @NgModule({
 
   declarations: [
@@ -37,7 +41,8 @@ import { AsyncPipe } from '../../node_modules/@angular/common';
     MapsComponent,
     SearchBoxComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    Dialog
   ],
   imports: [
     BrowserModule,
@@ -55,6 +60,7 @@ import { AsyncPipe } from '../../node_modules/@angular/common';
     MatIconModule,
     MatButtonModule,
     ButtonsModule,
+    MatDialogModule
     AngularFireAuthModule,
       AngularFireMessagingModule,
       AngularFireModule.initializeApp(environment.firebase)    
@@ -63,7 +69,12 @@ import { AsyncPipe } from '../../node_modules/@angular/common';
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptor,
     multi: true
+
+  }],
+  bootstrap: [AppComponent],
+  entryComponents:[Dialog]
   },MessagingService,AsyncPipe],
   bootstrap: [AppComponent]
+
 })
 export class AppModule { }
