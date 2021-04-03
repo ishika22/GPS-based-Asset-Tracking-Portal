@@ -65,4 +65,10 @@ export class BackendService {
     const status = this.http.get<any>(url)
     return status;
   }
+
+  getRole():Observable<any>{
+    const url =`${this.serverURL}/user/role`;
+    const data =this.http.get<any>(url);
+    return data;
+  }
 }
