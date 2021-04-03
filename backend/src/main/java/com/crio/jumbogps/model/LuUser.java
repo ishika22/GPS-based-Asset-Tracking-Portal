@@ -30,6 +30,7 @@ public class LuUser implements Serializable{
 	private LuSecurityRole fkSecurityRoleId;
 	private String username;
 	private String password;
+	private String notificationToken;
 	private Boolean isActive = true;
 	
 	@Id 
@@ -64,6 +65,14 @@ public class LuUser implements Serializable{
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@Column(name = "notification_token")
+	public String getNotificationToken(){
+		return notificationToken;
+	}
+	public void setNotificationToken(String notificationToken){
+		this.notificationToken = notificationToken;
 	}
 	
 	@ManyToOne(fetch = FetchType.EAGER)
