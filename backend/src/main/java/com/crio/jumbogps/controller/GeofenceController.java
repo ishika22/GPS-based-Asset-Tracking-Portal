@@ -54,7 +54,7 @@ public class GeofenceController {
 			List<LatLang> polygon = notificationSender.decodeCoordinates(assetDetail.getGeoFencingCoordinates());
 			Boolean assetInsidePolygon = containsLocation(latitude, longitude, polygon);
 			if(!assetInsidePolygon) {
-				notificationSender.sendNotification();
+				notificationSender.sendNotification("Asset not in Geofence","Asset "+assetDetail.getAssetName()+" is not in the specified geofence");
 			}
 		}
 		

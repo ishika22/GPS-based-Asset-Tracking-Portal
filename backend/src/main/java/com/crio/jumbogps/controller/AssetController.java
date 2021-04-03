@@ -12,10 +12,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.crio.jumbogps.model.AssetDetail;
 import com.crio.jumbogps.model.AssetHistory;
 import com.crio.jumbogps.repository.AssetDetailRepository;
@@ -30,6 +31,12 @@ public class AssetController {
 	
 	@Autowired  
 	private AssetDetailRepository assetDetailRepository;
+
+	@Autowired
+	private GeofenceController geoFenceController;
+
+	@Autowired 
+	private AnomalyDetectionController anomalyDetectionController;
 	
 	@GetMapping("/location/list")
 	public List<AssetHistory> getAllAssets() {
@@ -41,6 +48,21 @@ public class AssetController {
 	@GetMapping("/location/type")
 	public List<AssetHistory> getAAssetsHistoryByType(@RequestParam("type") int assetType) {
 		return assetHistoryRepository.getAssetDetailByType(assetType);
+	}
+
+	@PutMapping("/location/currentLocation")
+	public void storeCurrentLocationOfAsset(@RequestBody AssetHistory assetHistory){
+		Optional<AssetDetail> assetDetail = assetDetailRepository.findById(assetHistory.getFkAssetId().getPkAssetId());
+		if(assetDetail.isPresent()){
+			assetHistory.setFkAssetId(assetDetail.get());
+			assetHistory.setTimeOfTracking(LocalDateTime.now());
+			assetHistory = assetHistoryRepository.save(assetHistory);
+			if(assetHistory != null){
+				geoFenceController.checkAssetInGeofence(assetHistory.getFkAssetId().getPkAssetId());
+				anomalyDetectionController.isLocationOnPath(assetHistory.getFkAssetId().getPkAssetId());
+
+			}
+		}
 	}
 	
 	@GetMapping("/location/activeTodayList")

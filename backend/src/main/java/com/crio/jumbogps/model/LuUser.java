@@ -30,6 +30,7 @@ public class LuUser implements Serializable{
 	private LuSecurityRole fkSecurityRoleId;
 	private String username;
 	private String password;
+	private String notificationToken;
 	private Boolean isActive = true;
 	
 	@Id 
@@ -40,6 +41,14 @@ public class LuUser implements Serializable{
 	}
 	public void setPkUserId(Integer pkUserId) {
 		this.pkUserId = pkUserId;
+	}
+
+	@Column(name = "notification_token")
+	public String getNotificationToken(){
+		return notificationToken;
+	}
+	public void setNotificationToken(String notificationToken){
+		this.notificationToken = notificationToken;
 	}
 	
 	@Column(name = "first_name",nullable = false)
