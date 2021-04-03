@@ -153,6 +153,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     this.selectedGeofence?.setMap(null)
     this.closeDrawing()
     this.disableRouteInput()
+    this.dataService.currentData().subscribe((data)=>this.convertAndPlotMarkers(data))   
   }
   closeDrawing(){
     this.drawingManger.setMap(null)

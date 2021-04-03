@@ -66,6 +66,10 @@ export class HomeComponent implements OnInit {
   
   ID:string=''
   showmarkerWithId(){
+    if(this.ID==''){
+      this.dataService.changeData(this.assets)
+      return
+    }
     this.dataService.changeData([])
     this.assets.forEach(asset => {
       if (asset.fkAssetId.pkAssetId.toString()==this.ID) {
