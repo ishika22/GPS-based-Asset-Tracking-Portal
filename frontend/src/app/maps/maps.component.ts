@@ -121,6 +121,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     `
     this.info.options={pixelOffset: new google.maps.Size(0, -30),content}  
 
+    
     this.historySubscription=this.info.domready.subscribe(()=> 
       document.getElementById(`history`).addEventListener('click',()=>{
         this.loadHistory(data.fkAssetId.pkAssetId)
@@ -226,8 +227,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
         if (status === "OK") {
           me.directionsRenderer.setDirections(response);
           this.directionsRenderer.setMap(this.map.googleMap);
-
-          this.summrayList=response.routes.map((a:any)=>a.summary )
+          this.summrayList=response.routes.map((a:any)=>a.summary)
           console.log(this.directionsRenderer);
           const anomalyButton=document.getElementById(`anomaly`) as HTMLInputElement
           anomalyButton.disabled=false
