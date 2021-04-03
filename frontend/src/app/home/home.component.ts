@@ -76,14 +76,28 @@ export class HomeComponent implements OnInit {
 
   public data: Array<any> = [{
     text:"Add User",
+    icon:'user',
   
 }, {
     text:"Deactivate User",
+     icon:'user',
+    click :()=>{
+      this.backend.deactivateUser().subscribe((status)=>{
+        if(status=='OK'){
+          this.logout();
+        }
+      })
+    }
 }, {
   text:"Logout",
+  icon:'logout',
   click:()=>{
     localStorage.removeItem('token');
     this.router.navigate(['/login'])
   }
 },];
+logout(){
+  localStorage.removeItem('token');
+  this.router.navigate(['/login'])
+}
 }

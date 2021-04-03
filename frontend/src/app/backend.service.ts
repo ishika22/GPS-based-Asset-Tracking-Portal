@@ -46,4 +46,9 @@ export class BackendService {
     const isValid = this.http.post<any>(url,data)
     return isValid;
   }
+  deactivateUser():Observable<any>{
+    const url = `${this.serverURL}/user/deactiveUser`;
+    const status = this.http.get<any>(url)
+    return status;
+  }
 }
