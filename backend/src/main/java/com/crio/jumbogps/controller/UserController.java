@@ -42,6 +42,14 @@ public class UserController {
 		try {
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(luUser.getUsername(), luUser.getPassword()));
+			LuUser user = userRepository.findByUsername(luUser.getUsername());
+			
+			if( (luUser.getNotificationToken() == null && user.getNotificationToken()!=null) ||
+			(luUser.getNotificationToken() != null && user.getNotificationToken() == null) ||
+			(!user.getNotificationToken().contentEquals(luUser.getNotificationToken()))){
+				user.setNotificationToken(luUser.getNotificationToken());
+				userRepository.save(user);
+			}
 		}catch(BadCredentialsException e) {
 			throw new Exception("Incorrect Username or Password",e);
 		}
