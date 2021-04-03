@@ -47,7 +47,7 @@ public class AnomalyDetectionController {
 	}
 
 	@GetMapping(value = "/asset/anomaly")
-	private void isLocationOnPath(@RequestParam("id") Integer assetId) {
+	public void isLocationOnPath(@RequestParam("id") Integer assetId) {
 		AssetHistory assetHistory = assetHistoryRepository.getCurrentLocationOfAsset(assetId);
 		Double latitude = assetHistory.getLatitude();
 		Double longitude = assetHistory.getLongitude();
@@ -57,7 +57,7 @@ public class AnomalyDetectionController {
 			List<LatLang> polygon = notificationSender.decodeCoordinates(assetDetail.getAnomalyDetectionCoordinates());
 			Boolean assetOnPath = isLocationOnEdgeOrPath(latitude, longitude, polygon, false, true, DEFAULT_TOLERANCE);
 			if (!assetOnPath) {
-				notificationSender.sendNotification();
+				notificationSender.sendNotification("Asset not on expected route","Asset "+assetDetail.getAssetName()+" is not on the expected route");
 			}
 		}
 	}
