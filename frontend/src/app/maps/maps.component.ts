@@ -259,8 +259,9 @@ export class MapsComponent implements OnInit,AfterViewInit {
     anomalyButton.innerText='submit route'
     anomalyButton.addEventListener('click',()=>{
       const path=this.directionsRenderer.getDirections().routes[this.directionsRenderer.getRouteIndex()].overview_polyline
-      this.backend.pushGeofence(id,path).subscribe(()=>(console.log('done')),()=>alert('some error occured'));
+      this.backend.pushAnomly(id,path).subscribe(()=>(console.log('done')),()=>alert('some error occured'));
       console.log('submit',path);
+
       anomalyButton.hidden=true
       console.log(this.directionsRenderer);
       

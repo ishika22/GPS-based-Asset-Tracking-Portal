@@ -46,16 +46,16 @@ export class BackendService {
     const isValid = this.http.post<any>(url,data)
     return isValid;
   }
-  pushAnomly(id:string,coordinate:string):Observable<any>{
+  pushAnomly(pkAssetId:string,anomalyDetectionCoordinates:string):Observable<any>{
     const url = `${this.serverURL}/anomaly/coordinates`;
-    let data = {  id,coordinate };
+    let data = {  pkAssetId,anomalyDetectionCoordinates };
     const isValid = this.http.post<any>(url,data)
     return isValid;
   }
-  pushGeofence(id:string,coordinate:string):Observable<any>{
-    const url = `${this.serverURL}/anomaly/coordinates`;
-    let data = {  id,coordinate };
+    pushGeofence(pkAssetId:string,geoFencingCoordinates:string):Observable<any>{
+    const url = `${this.serverURL}/geofencing/coordinates`;
+    let data = { pkAssetId,geoFencingCoordinates };
     const isValid = this.http.post<any>(url,data)
     return isValid;
-  }
+    }
 }
