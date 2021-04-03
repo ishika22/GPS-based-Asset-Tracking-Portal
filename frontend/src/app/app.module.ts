@@ -19,7 +19,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
+import { Dialog, HomeComponent } from './home/home.component';
 import { TokenInterceptor } from './token.interceptor';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
@@ -29,6 +29,7 @@ import { AngularFireModule } from '@angular/fire';
 import { MessagingService } from './service/messaging.service';
 import { environment } from '../environments/environment';
 import { AsyncPipe } from '../../node_modules/@angular/common';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
 
@@ -37,7 +38,8 @@ import { AsyncPipe } from '../../node_modules/@angular/common';
     MapsComponent,
     SearchBoxComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    Dialog
   ],
   imports: [
     BrowserModule,
@@ -57,13 +59,18 @@ import { AsyncPipe } from '../../node_modules/@angular/common';
     ButtonsModule,
     AngularFireAuthModule,
       AngularFireMessagingModule,
-      AngularFireModule.initializeApp(environment.firebase)    
+      AngularFireModule.initializeApp(environment.firebase)   ,
+      MatDialogModule ,
+      MatFormFieldModule,
   ],
+  
   providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'},ErrorStateMatcher,{
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptor,
     multi: true
   },MessagingService,AsyncPipe],
-  bootstrap: [AppComponent]
+
+  bootstrap: [AppComponent],
+  entryComponents:[Dialog]
 })
 export class AppModule { }

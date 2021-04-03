@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AssetDetail } from '../AssetDetail';
 import { BackendService } from '../backend.service';
@@ -9,7 +10,11 @@ interface Types {
   value: string;
   viewValue: string;
 }
-
+interface DialogData {
+  title:string
+  username: string;
+  password: string;
+}
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -19,7 +24,8 @@ export class HomeComponent implements OnInit {
   @ViewChild(MapsComponent, { static: false }) map: MapsComponent
   constructor(private backend:BackendService,
     private dataService: DataBindingService,
-    private router: Router) {}
+    private router: Router,
+    public dialog: MatDialog ) {}
 
   
   title = 'Jumbo GPS';
@@ -76,22 +82,32 @@ export class HomeComponent implements OnInit {
         this.dataService.changeData([asset])
       }
     });
-  }
+  } 
+  username: string;
+  password: string;
 
+  dialogService (){
+    this.dialog.open(Dialog, {
+      width: '250px',
+      data: {username: this.username, password: this.password}
+    }).afterClosed().subscribe(result => {
+      console.log('The dialog was closed',result);
+    });
+  }
   public data: Array<any> = [{
     text:"Add User",
     icon:'user',
-  
+    click:()=> this.dialogService()
 }, {
     text:"Deactivate User",
      icon:'user',
-    click :()=>{
-      this.backend.deactivateUser().subscribe((status)=>{
-        if(status=='OK'){
-          this.logout();
-        }
-      })
-    }
+    // click :()=>{
+    //   this.backend.deactivateUser().subscribe((status)=>{
+    //     if(status=='OK'){
+    //       this.logout();
+    //     }
+    //   })
+    // }
 }, {
   text:"Logout",
   icon:'logout',
@@ -104,4 +120,19 @@ logout(){
   localStorage.removeItem('token');
   this.router.navigate(['/login'])
 }
+}
+@Component({
+  selector: 'dialog-box',
+  templateUrl: 'dialog.component.html',
+})
+export class Dialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<Dialog>,
+    @Inject(MAT_DIALOG_DATA) public data:DialogData) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
 }
