@@ -26,7 +26,7 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire';
-import { MessagingService } from './service/messaging.service';
+import { DialogNotification, MessagingService } from './service/messaging.service';
 import { environment } from '../environments/environment';
 import { AsyncPipe } from '../../node_modules/@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -39,7 +39,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
     SearchBoxComponent,
     LoginComponent,
     HomeComponent,
-    Dialog
+    Dialog,
+    DialogNotification
   ],
   imports: [
     BrowserModule,
@@ -71,6 +72,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   },MessagingService,AsyncPipe],
 
   bootstrap: [AppComponent],
-  entryComponents:[Dialog]
+  entryComponents:[Dialog,DialogNotification]
 })
 export class AppModule { }
