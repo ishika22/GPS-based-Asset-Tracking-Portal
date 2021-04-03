@@ -22,6 +22,13 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { TokenInterceptor } from './token.interceptor';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireModule } from '@angular/fire';
+import { MessagingService } from './service/messaging.service';
+import { environment } from '../environments/environment';
+import { AsyncPipe } from '../../node_modules/@angular/common';
 
 @NgModule({
 
@@ -47,14 +54,16 @@ import { ButtonsModule } from '@progress/kendo-angular-buttons';
     MatFormFieldModule,
     MatIconModule,
     MatButtonModule,
-    ButtonsModule
-    
+    ButtonsModule,
+    AngularFireAuthModule,
+      AngularFireMessagingModule,
+      AngularFireModule.initializeApp(environment.firebase)    
   ],
   providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'},ErrorStateMatcher,{
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptor,
     multi: true
-  }],
+  },MessagingService,AsyncPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
