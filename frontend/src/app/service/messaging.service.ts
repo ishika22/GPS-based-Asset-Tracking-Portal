@@ -11,9 +11,11 @@ requestPermission() {
 this.angularFireMessaging.requestToken.subscribe(
 (token) => {
 console.log(token);
+localStorage.setItem('FCMToken',token)
 },
 (err) => {
 console.error('Unable to get permission to notify.', err);
+localStorage.setItem('FCMToken',null)
 }
 );
 }
