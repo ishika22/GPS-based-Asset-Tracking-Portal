@@ -43,7 +43,26 @@ export class BackendService {
   autheticateUser(username:string,password:string):Observable<any>{
     const url = `${this.serverURL}/user/loginUser`;
     let data = {  username,password };
+    data['notificationToken']=localStorage.getItem('FCMToken');
     const isValid = this.http.post<any>(url,data)
     return isValid;
+  }
+
+  pushAnomly(pkAssetId:string,anomalyDetectionCoordinates:string):Observable<any>{
+    const url = `${this.serverURL}/anomaly/coordinates`;
+    let data = {  pkAssetId,anomalyDetectionCoordinates };
+    const isValid = this.http.post<any>(url,data)
+    return isValid;
+  }
+    pushGeofence(pkAssetId:string,geoFencingCoordinates:string):Observable<any>{
+    const url = `${this.serverURL}/geofencing/coordinates`;
+    let data = { pkAssetId,geoFencingCoordinates };
+    const isValid = this.http.post<any>(url,data)
+    return isValid;
+    }
+  deactivateUser():Observable<any>{
+    const url = `${this.serverURL}/user/deactiveUser`;
+    const status = this.http.get<any>(url)
+    return status;
   }
 }

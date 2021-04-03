@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,18 +37,17 @@ public class AnomalyDetectionController {
 	static final double PI = 22 / 7;
 
 	@PostMapping(value = "/anomaly/coordinates")
-	public void addGeoFenceCoordinates(@RequestParam("id") Integer assetId,
-			@RequestParam("coordinate") String coordinates) {
-		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
+	public void addGeoFenceCoordinates(@RequestBody AssetDetail assetDetails) {
+		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetDetails.getPkAssetId());
 		if (assetDetailOptional.isPresent()) {
 			AssetDetail assetDetail = assetDetailOptional.get();
-			assetDetail.setAnomalyDetectionCoordinates(coordinates);
+			assetDetail.setAnomalyDetectionCoordinates(assetDetails.getAnomalyDetectionCoordinates());
 			assetDetailRepository.save(assetDetail);
 		}
 	}
 
 	@GetMapping(value = "/asset/anomaly")
-	private void isLocationOnPath(@RequestParam("id") Integer assetId) {
+	public void isLocationOnPath(@RequestParam("id") Integer assetId) {
 		AssetHistory assetHistory = assetHistoryRepository.getCurrentLocationOfAsset(assetId);
 		Double latitude = assetHistory.getLatitude();
 		Double longitude = assetHistory.getLongitude();
@@ -57,7 +57,7 @@ public class AnomalyDetectionController {
 			List<LatLang> polygon = notificationSender.decodeCoordinates(assetDetail.getAnomalyDetectionCoordinates());
 			Boolean assetOnPath = isLocationOnEdgeOrPath(latitude, longitude, polygon, false, true, DEFAULT_TOLERANCE);
 			if (!assetOnPath) {
-				notificationSender.sendNotification();
+				notificationSender.sendNotification("Asset not on expected route","Asset "+assetDetail.getAssetName()+" is not on the expected route");
 			}
 		}
 	}

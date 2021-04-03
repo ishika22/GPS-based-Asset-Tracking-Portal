@@ -73,6 +73,10 @@ export class HomeComponent implements OnInit {
   
   ID:string=''
   showmarkerWithId(){
+    if(this.ID==''){
+      this.dataService.changeData(this.assets)
+      return
+    }
     this.dataService.changeData([])
     this.assets.forEach(asset => {
       if (asset.fkAssetId.pkAssetId.toString()==this.ID) {
@@ -90,6 +94,7 @@ export class HomeComponent implements OnInit {
   }
   public data: Array<any> = [{
     text:"Add User",
+
     click:()=> this.dialogService('Add new user')}, {
         text:"Deactivate User",
         click:()=> this.dialogService('Deactivate User')
@@ -115,5 +120,31 @@ export class Dialog {
   onNoClick(): void {
     this.dialogRef.close();
   }
+
+
+    icon:'user',
+  
+}, {
+    text:"Deactivate User",
+     icon:'user',
+    click :()=>{
+      this.backend.deactivateUser().subscribe((status)=>{
+        if(status=='OK'){
+          this.logout();
+        }
+      })
+    }
+}, {
+  text:"Logout",
+  icon:'logout',
+  click:()=>{
+    localStorage.removeItem('token');
+    this.router.navigate(['/login'])
+  }
+},];
+logout(){
+  localStorage.removeItem('token');
+  this.router.navigate(['/login'])
+}
 
 }

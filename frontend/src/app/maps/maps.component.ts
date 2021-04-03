@@ -128,12 +128,12 @@ export class MapsComponent implements OnInit,AfterViewInit {
     );
     this.geofenceButtonListner=this.info.domready.subscribe(()=> 
     document.getElementById(`geofence`).addEventListener('click',()=>{
-      this.enableDrawing()
+      this.enableDrawing(data.fkAssetId.pkAssetId)
     },{ once: true })
   );
   this.anomalyButton=this.info.domready.subscribe(()=> 
     document.getElementById(`anomaly`).addEventListener('click',()=>{
-      this.enableRouteInput()
+      this.enableRouteInput(data.fkAssetId.pkAssetId)
     },{ once: true })
   );
     this.info.open(marker)
@@ -152,18 +152,22 @@ export class MapsComponent implements OnInit,AfterViewInit {
     this.selectedGeofence?.setMap(null)
     this.closeDrawing()
     this.disableRouteInput()
+    this.dataService.currentData().subscribe((data)=>this.convertAndPlotMarkers(data))   
   }
   closeDrawing(){
     this.drawingManger.setMap(null)
   }
-  enableDrawing(){
+  enableDrawing(id){
     this.drawingManger.setMap(this.map.googleMap)
 
     var element = <HTMLInputElement> document.getElementById(`geofence`);
     element.disabled = true;
     element.innerText='submit'
     element.addEventListener('click',()=>{
-     console.log('submit',google.maps.geometry.encoding.encodePath(this.selectedGeofence.getPath()));
+      const path=google.maps.geometry.encoding.encodePath(this.selectedGeofence.getPath())
+      this.backend.pushGeofence(id,path).subscribe(()=>(console.log('done')),()=>alert('some error occured'));
+      
+     console.log('submit',path);
      element.hidden=true;
      this.selectedGeofence.setEditable(false)
     },{ once: true })
@@ -222,6 +226,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
         if (status === "OK") {
           me.directionsRenderer.setDirections(response);
           this.directionsRenderer.setMap(this.map.googleMap);
+
           this.summrayList=response.routes.map((a:any)=>a.summary )
           console.log(this.directionsRenderer);
           const anomalyButton=document.getElementById(`anomaly`) as HTMLInputElement
@@ -233,7 +238,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     );
   }
 
-  enableRouteInput(){
+  enableRouteInput(id){
     this.summrayList=[]
     if(this.map.controls[google.maps.ControlPosition.LEFT_TOP].getLength()==0){
       this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(this.originInput)
@@ -254,7 +259,10 @@ export class MapsComponent implements OnInit,AfterViewInit {
     anomalyButton.disabled = true
     anomalyButton.innerText='submit route'
     anomalyButton.addEventListener('click',()=>{
-      console.log('submit',this.directionsRenderer.getDirections().routes[this.directionsRenderer.getRouteIndex()].overview_polyline);
+      const path=this.directionsRenderer.getDirections().routes[this.directionsRenderer.getRouteIndex()].overview_polyline
+      this.backend.pushAnomly(id,path).subscribe(()=>(console.log('done')),()=>alert('some error occured'));
+      console.log('submit',path);
+
       anomalyButton.hidden=true
       console.log(this.directionsRenderer);
       
