@@ -38,9 +38,17 @@ public class AssetController {
 	private AnomalyDetectionController anomalyDetectionController;
 	
 	@GetMapping("/location/list")
-	public List<AssetHistory> getAllAssets() {
-// 		getCurrentLocationOfAsset();
-		return assetHistoryRepository.findDistinctByFkAssetIdIn();
+	public List<AssetHistory> getAllAssets(@RequestParam(value = "noOfAsset") Optional<Integer> numberOfAsset) {
+		Integer maxAsset = null;
+		if(numberOfAsset.isPresent()){
+			 maxAsset = numberOfAsset.get();
+			 if(maxAsset == null){
+				 maxAsset = 100;
+			 }
+		 }else{
+			 maxAsset = 100;
+		 }
+		return assetHistoryRepository.findDistinctByFkAssetIdIn(maxAsset);
 	}
 	
 	@PutMapping("/location/currentLocation")
@@ -59,9 +67,9 @@ public class AssetController {
 	}
 	
 	@GetMapping("/location/type")
-	public List<AssetHistory> getAAssetsHistoryByType(@RequestParam("type") String assetType) {
+	public List<AssetHistory> getAAssetsHistoryByType(@RequestParam(value = "noOfAsset") Optional<Integer> numberOfAsset,@RequestParam("type") String assetType) {
 		if(assetType == null || assetType.contentEquals("undefined")){
-			return getAllAssets();
+			return getAllAssets(numberOfAsset);
 		}
 		return assetHistoryRepository.getAssetDetailByType(Integer.parseInt(assetType));
 	}

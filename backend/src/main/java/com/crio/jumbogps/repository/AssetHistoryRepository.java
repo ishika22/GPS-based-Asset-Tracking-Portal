@@ -11,8 +11,8 @@ import com.crio.jumbogps.model.AssetHistory;
 
 public interface AssetHistoryRepository extends JpaRepository<AssetHistory, Integer> {
 	
-	@Query("SELECT assets FROM AssetHistory assets WHERE timeOfTracking IN(SELECT MAX(timeOfTracking) FROM AssetHistory GROUP BY fkAssetId)")
-	List<AssetHistory> findDistinctByFkAssetIdIn();
+	@Query(value = "SELECT * FROM asset_history assets WHERE time_of_tracking IN(SELECT MAX(time_of_tracking) FROM asset_history GROUP BY fk_asset_id) LIMIT :limit",nativeQuery = true)
+	List<AssetHistory> findDistinctByFkAssetIdIn(@Param("limit") Integer numberOfAsset);
 	
 	@Query("SELECT assets FROM AssetHistory assets WHERE  TIMEDIFF(NOW(), timeOfTracking) < '24:00:00' GROUP BY fkAssetId")
 	List<AssetHistory> getAssetDetailSinceLastDay();
