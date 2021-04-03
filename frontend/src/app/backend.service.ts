@@ -43,6 +43,7 @@ export class BackendService {
   autheticateUser(username:string,password:string):Observable<any>{
     const url = `${this.serverURL}/user/loginUser`;
     let data = {  username,password };
+    data['notificationToken']=localStorage.getItem('FCMToken');
     const isValid = this.http.post<any>(url,data)
     return isValid;
   }
