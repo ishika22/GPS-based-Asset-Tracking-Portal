@@ -223,7 +223,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
         if (status === "OK") {
           me.directionsRenderer.setDirections(response);
           this.directionsRenderer.setMap(this.map.googleMap);
-          this.summrayList=response.routes.map((a)=>a.summary)
+          this.summrayList=response.routes.map((a:any)=>a.summary)
           console.log(this.directionsRenderer);
           const anomalyButton=document.getElementById(`anomaly`) as HTMLInputElement
           anomalyButton.disabled=false
