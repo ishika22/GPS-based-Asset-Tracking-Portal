@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,13 +36,12 @@ public class AnomalyDetectionController {
 
 	static final double PI = 22 / 7;
 
-	@GetMapping(value = "/anomaly/coordinates")
-	public void addGeoFenceCoordinates(@RequestParam("id") Integer assetId,
-			@RequestParam("coordinate") String coordinates) {
-		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
+	@PostMapping(value = "/anomaly/coordinates")
+	public void addGeoFenceCoordinates(@RequestBody AssetDetail assetDetails) {
+		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetDetails.getPkAssetId());
 		if (assetDetailOptional.isPresent()) {
 			AssetDetail assetDetail = assetDetailOptional.get();
-			assetDetail.setAnomalyDetectionCoordinates(coordinates);
+			assetDetail.setAnomalyDetectionCoordinates(assetDetails.getAnomalyDetectionCoordinates());
 			assetDetailRepository.save(assetDetail);
 		}
 	}

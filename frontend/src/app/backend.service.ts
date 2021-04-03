@@ -46,6 +46,7 @@ export class BackendService {
     const isValid = this.http.post<any>(url,data)
     return isValid;
   }
+
   pushAnomly(pkAssetId:string,anomalyDetectionCoordinates:string):Observable<any>{
     const url = `${this.serverURL}/anomaly/coordinates`;
     let data = {  pkAssetId,anomalyDetectionCoordinates };
@@ -58,4 +59,9 @@ export class BackendService {
     const isValid = this.http.post<any>(url,data)
     return isValid;
     }
+  deactivateUser():Observable<any>{
+    const url = `${this.serverURL}/user/deactiveUser`;
+    const status = this.http.get<any>(url)
+    return status;
+  }
 }
