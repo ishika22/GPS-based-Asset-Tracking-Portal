@@ -1,5 +1,7 @@
 package com.crio.jumbogps.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.crio.jumbogps.model.AuthenticationResponse;
+import com.crio.jumbogps.model.LuSecurityRole;
 import com.crio.jumbogps.model.LuUser;
+import com.crio.jumbogps.repository.SecurityRoleRepository;
 import com.crio.jumbogps.repository.UserRepository;
 import com.crio.jumbogps.security.JwtUtil;
 import com.crio.jumbogps.service.JwtUserDetailService;;
@@ -36,6 +40,9 @@ public class UserController {
 	
 	@Autowired
 	private JwtUtil jwtUtil;
+
+	@Autowired 
+	private SecurityRoleRepository securityRoleRepository;
 	
 	@PostMapping(value = "/user/loginUser")
 	public ResponseEntity<?> loginUser(@RequestBody LuUser luUser) throws Exception{
@@ -79,6 +86,11 @@ public class UserController {
 	
 	private String encryptPassword(String plainTextPassword){
 		return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
+	}
+
+	@GetMapping("securityRole/list")
+	public List<LuSecurityRole> getAllSecurityRoles(){
+		return securityRoleRepository.findAll();
 	}
 	
 	@GetMapping("/user/deactiveUser")
