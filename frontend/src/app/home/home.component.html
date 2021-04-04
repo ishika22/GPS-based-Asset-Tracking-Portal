@@ -2,7 +2,7 @@
 <div class="toolbar" role="banner">
     <img width="30" alt=""
       src="" />
-    <span>Jumbo GPS</span>
+    <span>Jumbo GPS</span>{{noOfMarker}}
     <div class="spacer"></div>
     <form>
       <mat-form-field>
@@ -29,9 +29,8 @@
         </button>
         <owl-date-time pickerMode='dialog'  #dt ></owl-date-time>
       </mat-form-field>
-      <button style="margin: 10px;" mat-raised-button color="primary" (click)="backToNormal()">Reset </button>
     </form>
-    
+    <increment-input [(value)]="noOfMarker" [step]="10" [min]="10" [max]="10000000" [wrap]="false"></increment-input>
     <p class="k-block">
       <kendo-dropdownbutton
           [data]="data"

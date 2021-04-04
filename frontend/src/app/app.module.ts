@@ -30,6 +30,7 @@ import { DialogNotification, MessagingService } from './service/messaging.servic
 import { environment } from '../environments/environment';
 import { AsyncPipe } from '../../node_modules/@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { IncrementInputComponent } from './increment-input/increment-input.component';
 
 @NgModule({
 
@@ -40,7 +41,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
     LoginComponent,
     HomeComponent,
     Dialog,
-    DialogNotification
+    DialogNotification,
+    IncrementInputComponent
   ],
   imports: [
     BrowserModule,

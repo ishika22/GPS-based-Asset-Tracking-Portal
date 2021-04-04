@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog ) {}
 
-  
+  noOfMarker:number
   title = 'Jumbo GPS';
   date=[]
   types:Types[]=[
@@ -52,6 +52,7 @@ export class HomeComponent implements OnInit {
     this.backend.getAllAssets().subscribe( (assets)=>{ 
       this.assets=assets
     })
+    this.noOfMarker=100
   }
   selectedType:string
   markers=[]

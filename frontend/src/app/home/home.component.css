@@ -308,3 +308,7 @@
 mat-form-field{
   padding: 5px;
 }
+increment-input {
+  width: 95px;
+  margin: 0 auto;
+}
