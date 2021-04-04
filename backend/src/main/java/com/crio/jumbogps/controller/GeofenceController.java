@@ -39,6 +39,7 @@ public class GeofenceController {
 			AssetDetail assetDetail = assetDetailOptional.get();
 			assetDetail.setGeoFencingCoordinates(assetDetails.getGeoFencingCoordinates());
 			assetDetailRepository.save(assetDetail);
+            checkAssetInGeofence(assetDetail.getPkAssetId());
 		}
 	}
 	
@@ -51,11 +52,13 @@ public class GeofenceController {
 		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
 		if(assetDetailOptional.isPresent()) {
 			AssetDetail assetDetail = assetDetailOptional.get();
+            if(assetDetail.getGeoFencingCoordinates()!=null){
 			List<LatLang> polygon = notificationSender.decodeCoordinates(assetDetail.getGeoFencingCoordinates());
 			Boolean assetInsidePolygon = containsLocation(latitude, longitude, polygon);
 			if(!assetInsidePolygon) {
 				notificationSender.sendNotification("Asset not in Geofence","Asset "+assetDetail.getAssetName()+" is not in the specified geofence");
 			}
+        }
 		}
 		
 	}

@@ -43,6 +43,7 @@ public class AnomalyDetectionController {
 			AssetDetail assetDetail = assetDetailOptional.get();
 			assetDetail.setAnomalyDetectionCoordinates(assetDetails.getAnomalyDetectionCoordinates());
 			assetDetailRepository.save(assetDetail);
+			isLocationOnPath(assetDetail.getPkAssetId());
 		}
 	}
 
@@ -54,11 +55,13 @@ public class AnomalyDetectionController {
 		Optional<AssetDetail> assetDetailOptional = assetDetailRepository.findById(assetId);
 		if (assetDetailOptional.isPresent()) {
 			AssetDetail assetDetail = assetDetailOptional.get();
+			if(assetDetail.getAnomalyDetectionCoordinates()!=null){
 			List<LatLang> polygon = notificationSender.decodeCoordinates(assetDetail.getAnomalyDetectionCoordinates());
 			Boolean assetOnPath = isLocationOnEdgeOrPath(latitude, longitude, polygon, false, true, DEFAULT_TOLERANCE);
 			if (!assetOnPath) {
 				notificationSender.sendNotification("Asset not on expected route","Asset "+assetDetail.getAssetName()+" is not on the expected route");
 			}
+		}
 		}
 	}
 
