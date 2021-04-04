@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormGroup, FormControl } from "@angular/forms";
 
 /**
@@ -70,6 +70,7 @@ export class IncrementInputComponent {
     }
 
     this._value = inputValue;
+    this.countChanged.emit(this._value);
   }
 
   private wrappedValue(inputValue): number {
@@ -95,4 +96,6 @@ export class IncrementInputComponent {
   shouldDisableIncrement(inputValue: number): boolean {
     return !this._wrap && inputValue >= this._max;
   }
+  @Output()
+  countChanged: EventEmitter<number> = new EventEmitter()
 }

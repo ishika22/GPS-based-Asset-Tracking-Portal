@@ -131,6 +131,9 @@ logout(){
   localStorage.removeItem('token');
   this.router.navigate(['/login'])
 }
+updateMarkerCount(a){
+  this.noOfMarker=a
+}
 }
 
 interface Role {
