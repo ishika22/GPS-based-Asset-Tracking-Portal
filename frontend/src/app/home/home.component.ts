@@ -10,11 +10,16 @@ interface Types {
   value: string;
   viewValue: string;
 }
+
 interface DialogData {
-  title:string
-  username: string;
+  firstName: string;
+  secondName: string;
   password: string;
+  email:string;
+  username:string;
+  role:string
 }
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -84,13 +89,18 @@ export class HomeComponent implements OnInit {
       }
     });
   } 
-  username: string;
+  firstName: string;
+  secondName: string;
   password: string;
+  email:string;
+  username:string;
+  role:string
 
   dialogService (){
     this.dialog.open(Dialog, {
-      width: '250px',
-      data: {username: this.username, password: this.password}
+      width: '40%',
+      panelClass: 'dialog-container-custom' ,
+      data: {firstName: this.firstName,secondName:this.secondName,password: this.password,email:this.email,userName:this.username,role:this.role}
     }).afterClosed().subscribe(result => {
       console.log('The dialog was closed',result);
     });
@@ -102,13 +112,13 @@ export class HomeComponent implements OnInit {
 }, {
     text:"Deactivate User",
      icon:'user',
-    // click :()=>{
-    //   this.backend.deactivateUser().subscribe((status)=>{
-    //     if(status=='OK'){
-    //       this.logout();
-    //     }
-    //   })
-    // }
+     click :()=>{
+       this.backend.deactivateUser().subscribe((status)=>{
+         if(status=='OK'){
+           this.logout();
+         }
+       })
+     }
 }, {
   text:"Logout",
   icon:'logout',
@@ -122,18 +132,40 @@ logout(){
   this.router.navigate(['/login'])
 }
 }
+
+interface Role {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'dialog-box',
   templateUrl: 'dialog.component.html',
+  styleUrls: ['./dialog.component.css']
 })
+
 export class Dialog {
 
   constructor(
     public dialogRef: MatDialogRef<Dialog>,
-    @Inject(MAT_DIALOG_DATA) public data:DialogData) {}
+    @Inject(MAT_DIALOG_DATA) public data:DialogData,
+    private backend:BackendService) {}
 
   onNoClick(): void {
     this.dialogRef.close();
   }
+  
+  roles:Role[]=[
+    {value: '1', viewValue: 'Administrator'},
+    {value: '2', viewValue: 'Consultant'}
+  ]
+  /*getRolesvalue(){
+    this.backend.getRole().subscribe(data=>{
+      console.log(data);
+      data.array.array.forEach(element => {
+        this.roles.push(element["roleName"]);
+      });
+    })
+  }*/
 
 }

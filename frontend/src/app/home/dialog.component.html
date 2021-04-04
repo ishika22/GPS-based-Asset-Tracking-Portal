@@ -1,16 +1,39 @@
-<h1 mat-dialog-title>{{data.title}}</h1>
-<div mat-dialog-content>
-  <p>Details</p>
-  <mat-form-field>
-    <mat-label>username</mat-label>
-    <input matInput [(ngModel)]="data.username">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>password</mat-label>
-    <input matInput [(ngModel)]="data.password">
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button  color="warn" mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
-</div>
+<div>
+  <h1 class="heading" mat-dialog-title>Add new user</h1>
+  <div mat-dialog-content>
+  
+    <mat-form-field class="firstName rightmargin">
+      <mat-label>First Name</mat-label>
+      <input matInput [(ngModel)]="data.firstName">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Second Name</mat-label>
+      <input matInput [(ngModel)]="data.secondName">
+    </mat-form-field>
+    <mat-form-field class="email">
+      <mat-label>Email</mat-label>
+      <input type = 'email' matInput [(ngModel)]="data.email">
+    </mat-form-field>
+    <br>
+    <mat-form-field class="rightmargin">
+      <mat-label>User Name</mat-label>
+      <input matInput [(ngModel)]="data.username">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>password</mat-label>
+      <input type = 'password' matInput [(ngModel)]="data.password">
+      <br>
+    </mat-form-field>
+      <mat-form-field>
+     <mat-label>Role</mat-label>
+      <mat-select [(value)]="data.role">
+        <mat-option>None</mat-option>
+        <mat-option *ngFor="let selectedRole of roles" [value]="selectedRole.value">{{selectedRole.viewValue}}</mat-option>
+      </mat-select>
+    </mat-form-field> 
+  </div>
+  <div mat-dialog-actions class="actionbutton">
+    <button mat-button  (click)="onNoClick()">No Thanks</button>
+    <button mat-button class="btn" [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+  </div>
+  </div>
