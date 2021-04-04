@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit {
   selectedType:string
   markers=[]
   typeChange(){
-      this.backend.getAssetsByType(this.selectedType).subscribe( (assets)=>{      
+      this.backend.getAssetsByType(this.selectedType,this.noOfMarker).subscribe( (assets)=>{      
         this.dataService.changeData(assets)
       })
   }
@@ -133,6 +133,9 @@ logout(){
 }
 updateMarkerCount(a){
   this.noOfMarker=a
+  this.backend.getAllAssetscount(a).subscribe((assets)=>{      
+    this.dataService.changeData(assets)
+  })
 }
 }
 

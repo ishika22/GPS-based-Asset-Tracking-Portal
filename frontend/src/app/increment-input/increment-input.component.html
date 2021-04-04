@@ -10,7 +10,7 @@
       [disabled]="shouldDisableDecrement(_value)">
       <mat-icon>remove</mat-icon>
     </button>
-    <input matInput type="number" [(ngModel)]="_value" (focus)="setColor('primary')" (blur)="setColor('default')" />
+    <input matInput type="number" [(ngModel)]="_value" (focus)="setColor('primary')" (blur)="setColor('default')" disabled=true/>
     <button 
       mat-button 
       mat-icon-button 

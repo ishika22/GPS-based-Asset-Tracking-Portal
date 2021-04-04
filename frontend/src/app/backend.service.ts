@@ -24,14 +24,19 @@ export class BackendService {
     const Assets = this.http.get<AssetDetail[]>(url)  //of(AssetDetails);
     return Assets     
   }
+  getAllAssetscount(noOfAsset:number):Observable<AssetDetail[]>{
+    const url = `${this.serverURL}/location/list?noOfAsset=${noOfAsset}`;
+    const Assets = this.http.get<AssetDetail[]>(url)  //of(AssetDetails);
+    return Assets     
+  }
 
   getAssetHistory(id:number):Observable<AssetHistory[]>{
     const url = `${this.serverURL}/location/id?id=${id}`;
     const AssetHistory = this.http.get<AssetHistory[]>(url)
     return AssetHistory;
   }
-  getAssetsByType(typeId:string):Observable<AssetDetail[]>{
-    const url = `${this.serverURL}/location/type?type=${typeId}`;
+  getAssetsByType(typeId:string,noOfAsset:number):Observable<AssetDetail[]>{
+    const url = `${this.serverURL}/location/type?type=${typeId}&noOfAsset=${noOfAsset}`;
     const Assets = this.http.get<AssetDetail[]>(url)
     return Assets;
   }

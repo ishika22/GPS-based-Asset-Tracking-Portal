@@ -50,11 +50,7 @@ export class AppComponent implements OnInit{
   }
   selectedType:string
   markers=[]
-  typeChange(){
-      this.backend.getAssetsByType(this.selectedType).subscribe( (assets)=>{      
-        this.dataService.changeData(assets)
-      })
-  }
+
   
   backToNormal(){
     this.backend.getAllAssets().subscribe( (assets)=>{ 
