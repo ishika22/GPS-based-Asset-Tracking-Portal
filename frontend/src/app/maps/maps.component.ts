@@ -61,11 +61,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
   });
   
   ngOnInit(): void {
-    //set center of map
-    this.center = {
-      lat: 19.119613,
-      lng: 72.905306,      
-    }
+    
     //plot markers  on map
     this.backend.getAllAssets().subscribe((assets)=>this.convertAndPlotMarkers(assets))
     this.dataService.currentData().subscribe((data)=>this.convertAndPlotMarkers(data))   
@@ -102,6 +98,14 @@ export class MapsComponent implements OnInit,AfterViewInit {
         },
         data:i
       }})   
+      var bounds = new google.maps.LatLngBounds();
+      assets.forEach((i)=>{
+        bounds.extend({
+          lat:i.latitude,
+          lng:i.longitude
+        })
+      })
+      this.map.fitBounds(bounds)
   }
   
   vertices: google.maps.LatLngLiteral[] =[]
