@@ -31,6 +31,7 @@ import { environment } from '../environments/environment';
 import { AsyncPipe } from '../../node_modules/@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { IncrementInputComponent } from './increment-input/increment-input.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
 
@@ -65,6 +66,12 @@ import { IncrementInputComponent } from './increment-input/increment-input.compo
       AngularFireModule.initializeApp(environment.firebase)   ,
       MatDialogModule ,
       MatFormFieldModule,
+      ServiceWorkerModule.register('ngsw-worker.js', {
+        enabled: environment.production,
+        // Register the ServiceWorker as soon as the app is stable
+        // or after 30 seconds (whichever comes first).
+        registrationStrategy: 'registerWhenStable:30000'
+      }),
   ],
   
   providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'},ErrorStateMatcher,{

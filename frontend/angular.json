@@ -23,7 +23,8 @@
               "src/favicon.ico",
               "src/assets",
               "src/firebase-messaging-sw.js",
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               {
@@ -60,7 +61,9 @@
                   "maximumWarning": "6kb",
                   "maximumError": "10kb"
                 }
-              ]
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
             }
           }
         },
@@ -90,7 +93,8 @@
             "karmaConfig": "karma.conf.js",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               {
