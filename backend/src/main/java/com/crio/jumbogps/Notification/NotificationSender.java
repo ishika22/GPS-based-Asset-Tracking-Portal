@@ -10,13 +10,18 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import com.crio.jumbogps.model.LatLang;
+import com.crio.jumbogps.repository.UserRepository;
 
 @Service
 public class NotificationSender {
+
+	@Autowired
+	UserRepository userRepository;
 	
 	public List<LatLang> decodeCoordinates(String encodedPath) {
 		int len = encodedPath.length();
@@ -52,27 +57,30 @@ public class NotificationSender {
 	}
 	
 	public void sendNotification(String topic,String body) {
-			String token = "fntCH0meu-txE6AMFDp__M:APA91bHerUnhaIOQ6JYIhY-uJjB6f9g_hBUy82-xV97B7gLnIoOcm6asnzKBTejRKeajpsHWDOMjJgZr_QoNUgI9WFBXfPZznATWfmWcJycu2LXuv3p44CV1_r5Rd7qaBMczh7lR0lIj";
-			try{
-			GoogleCredentials googleCredentials = GoogleCredentials
+		
+		String[] tokens = userRepository.getAllTokens();
+		try{
+			for(String token : tokens){
+				GoogleCredentials googleCredentials = GoogleCredentials
 				.fromStream(new ClassPathResource("firebase-service-account.json").getInputStream());
-			FirebaseOptions firebaseOptions = FirebaseOptions
+				FirebaseOptions firebaseOptions = FirebaseOptions
 				.builder()
 				.setCredentials(googleCredentials)
 				.build();
 				if(FirebaseApp.getApps().isEmpty())
 					FirebaseApp.initializeApp(firebaseOptions,"JumboTail");
 				FirebaseApp app = FirebaseApp.getInstance("JumboTail");
-			Message message = Message
+				Message message = Message
                 .builder().setToken(token)
                 .setNotification(new Notification(topic, body))
                 .build();
-				System.out.println(body);
-				String response = FirebaseMessaging.getInstance(app).sendAsync(message).get();
-				System.out.println(response);
-			}catch(Exception e){
-				e.printStackTrace();
+			
+				FirebaseMessaging.getInstance(app).sendAsync(message).get();
 			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 
 	}
 }
