@@ -103,11 +103,8 @@ export class MapsComponent implements OnInit,AfterViewInit {
         data:i
       }})   
       var bounds = new google.maps.LatLngBounds();
-      assets.forEach((i)=>{
-        bounds.extend({
-          lat:i.latitude,
-          lng:i.longitude
-        })
+      this.markers.forEach((i)=>{
+        bounds.extend(i.position)
       })
       this.map?.fitBounds(bounds,200)
   }
@@ -169,7 +166,11 @@ export class MapsComponent implements OnInit,AfterViewInit {
     this.anomalyButton.unsubscribe()
     this.closeDrawing()
     this.disableRouteInput()
-    this.backend.getAllAssets().subscribe((assets)=>this.convertAndPlotMarkers(assets))
+    var bounds = new google.maps.LatLngBounds();
+      this.markers.forEach((i)=>{
+        bounds.extend(i.position)
+      })
+      this.map?.fitBounds(bounds,200)
   }
   closeDrawing(){
     this.drawingManger.setMap(null)
