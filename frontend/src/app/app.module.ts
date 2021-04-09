@@ -17,6 +17,7 @@ import {MatInputModule} from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSidenavModule} from '@angular/material/sidenav';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LoginComponent } from './login/login.component';
 import { Dialog, HomeComponent } from './home/home.component';
@@ -65,6 +66,7 @@ import { IncrementInputComponent } from './increment-input/increment-input.compo
       AngularFireModule.initializeApp(environment.firebase)   ,
       MatDialogModule ,
       MatFormFieldModule,
+      MatSidenavModule
   ],
   
   providers: [DatePipe,TimeAgoPipe,{provide: OWL_DATE_TIME_LOCALE, useValue: 'en-IN'},ErrorStateMatcher,{

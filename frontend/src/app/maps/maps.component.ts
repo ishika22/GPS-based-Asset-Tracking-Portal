@@ -83,7 +83,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     const destinationAutocomplete = new google.maps.places.Autocomplete(this.destinationInput,{fields:["place_id"]});
     // submitRoute.hidden=true
     
-    console.log(this.map.controls);
+    console.log(this.map);
     
     // originInput.hidden=true
     // destinationInput.hidden=true
@@ -107,7 +107,13 @@ export class MapsComponent implements OnInit,AfterViewInit {
       this.markers.forEach((i)=>{
         bounds.extend(i.position)
       })
-      this.map?.fitBounds(bounds,200)
+      if(this.markers.length>0){
+        this.map?.fitBounds(bounds)
+      }
+      // else{
+      //   alert('No asssts found in as per given filter')
+      // }
+      
   }
   
   vertices: google.maps.LatLngLiteral[] =[]
@@ -118,12 +124,12 @@ export class MapsComponent implements OnInit,AfterViewInit {
     const date = this.pipe.transform(data.timeOfTracking, 'MMMM d, y, h:mm a');
     const timeAgo = new TimeAgo('en-US')
     const timeAgoString=timeAgo.format(Date.parse(data.timeOfTracking))
-    const content =`
+    const content =`<div style='color:black'>
       <h2>${name}</h2><p><b>Last seen:</b>${timeAgoString}, ${date}</p>
       <p><b>Type:</b> ${type}<br/><b>Contact Details:</b> ${contactDetails}</p>
       <button id='history'">check history</button>
       <button id='geofence'">plot geofence</button>
-      <button id='anomaly'">mark route</button>
+      <button id='anomaly'">mark route</button><div>
     `
     this.info.options={pixelOffset: new google.maps.Size(0, -30),content}  
 
