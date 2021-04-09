@@ -61,6 +61,11 @@ export class MapsComponent implements OnInit,AfterViewInit {
   });
   
   ngOnInit(): void {
+    //set center of map
+    this.center = {
+      lat: 19.119613,
+      lng: 72.905306,      
+    }
     
     //plot markers  on map
     this.backend.getAllAssets().subscribe((assets)=>this.convertAndPlotMarkers(assets))
@@ -102,7 +107,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
       this.markers.forEach((i)=>{
         bounds.extend(i.position)
       })
-      this.map.fitBounds(bounds)
+      this.map?.fitBounds(bounds,200)
   }
   
   vertices: google.maps.LatLngLiteral[] =[]
@@ -128,15 +133,17 @@ export class MapsComponent implements OnInit,AfterViewInit {
         this.loadHistory(data.fkAssetId.pkAssetId)
       },{ once: true })
     );
-    this.geofenceButtonListner=this.info.domready.subscribe(()=> 
+    this.geofenceButtonListner=this.info.domready.subscribe(()=> {
+      this.geofenceButtonListner.unsubscribe()
     document.getElementById(`geofence`).addEventListener('click',()=>{
       this.enableDrawing(data.fkAssetId.pkAssetId)
-    },{ once: true })
+    },{ once: true })}
   );
-  this.anomalyButton=this.info.domready.subscribe(()=> 
+  this.anomalyButton=this.info.domready.subscribe(()=> {
+    this.anomalyButton.unsubscribe()
     document.getElementById(`anomaly`).addEventListener('click',()=>{
       this.enableRouteInput(data.fkAssetId.pkAssetId)
-    },{ once: true })
+    },{ once: true })}
   );
     this.info.open(marker)
   }
@@ -152,6 +159,8 @@ export class MapsComponent implements OnInit,AfterViewInit {
   closeClick(){
     this.vertices=[] 
     this.selectedGeofence?.setMap(null)
+    this.geofenceButtonListner.unsubscribe()
+    this.anomalyButton.unsubscribe()
     this.closeDrawing()
     this.disableRouteInput()
     var bounds = new google.maps.LatLngBounds();
@@ -162,6 +171,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
   }
   closeDrawing(){
     this.drawingManger.setMap(null)
+    this.geofenceButtonListner.unsubscribe()
   }
   enableDrawing(id){
     this.drawingManger.setMap(this.map.googleMap)
@@ -169,6 +179,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     var element = <HTMLInputElement> document.getElementById(`geofence`);
     element.disabled = true;
     element.innerText='submit'
+    this.geofenceButtonListner.unsubscribe()
     element.addEventListener('click',()=>{
       const path=google.maps.geometry.encoding.encodePath(this.selectedGeofence.getPath())
       this.backend.pushGeofence(id,path).subscribe(()=>(console.log('done')),()=>alert('some error occured'));
@@ -259,7 +270,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     this.originInput.value=""
     this.destinationInput.value=""
     // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(submitRoute)
-
+    this.anomalyButton.unsubscribe()
     const anomalyButton=document.getElementById(`anomaly`) as HTMLInputElement
     anomalyButton.disabled = true
     anomalyButton.innerText='submit route'
@@ -270,7 +281,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
 
       anomalyButton.hidden=true
       console.log(this.directionsRenderer);
-      
+      this.anomalyButton.unsubscribe()
       this.disableRouteInput()
      },{ once: true })
      
@@ -280,7 +291,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
     this.destinationInput.hidden=true
     this.routeIndexSelect.hidden=true
     this.directionsRenderer.setMap(null)
-
+    this.anomalyButton.unsubscribe()
   }
   
   
