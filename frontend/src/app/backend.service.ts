@@ -1,13 +1,12 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { AssetDetail, AssetHistory } from './AssetDetail';
-import { AssetDetails, history } from './maps/mock-data';
+import { AssetDetail, AssetHistory,LuSecurityRole } from './AssetDetail';
 @Injectable({
   providedIn: 'root'
 })
 export class BackendService {
-
+  
   constructor(private http:HttpClient) {
     
    }
@@ -51,6 +50,23 @@ export class BackendService {
     data['notificationToken']=localStorage.getItem('FCMToken');
     const isValid = this.http.post<any>(url,data)
     return isValid;
+  }
+
+  addNewUser(result) :Observable<any>{
+      let luSecurityRole: LuSecurityRole = {pkSecurityRoleId: result["role"], roleName: null};
+      console.log("abcd",result["firstName"]);
+      const url = `${this.serverURL}/user/signup`;
+      let data = {};
+      data['firstName'] = result["firstName"];
+      data['lastName'] = result["secondName"];
+      data['email'] = result["email"];
+      data['username'] = result["username"];
+      data['password'] = result["password"];
+      data['fkSecurityRoleId'] = luSecurityRole;
+      data['notificationToken']=localStorage.getItem('FCMToken');
+      const isValid = this.http.post<any>(url,data)
+      return isValid;
+    
   }
 
   pushAnomly(pkAssetId:string,anomalyDetectionCoordinates:string):Observable<any>{
