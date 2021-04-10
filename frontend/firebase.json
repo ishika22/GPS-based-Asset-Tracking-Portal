@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "site": "jumbogps",
+      "target": "frontend",
       "public": "dist/frontend",
       "ignore": [
         "**/.*"

@@ -3,7 +3,7 @@
     "notification-test-8be5b": {
       "hosting": {
         "frontend": [
-          "notification-test-8be5b"
+          "jumbogps"
         ]
       }
     }
