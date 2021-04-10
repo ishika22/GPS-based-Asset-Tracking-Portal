@@ -1,37 +1,11 @@
 <!-- Toolbar -->
 <div class="toolbar" role="banner">
-    <img width="30" alt=""
-      src="" />
+  <button mat-icon-button color="accent" aria-label="Example icon button with a menu icon" (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
     <span>Jumbo GPS</span>
     <div class="spacer"></div>
-    <form>
-      <mat-form-field>
-        <mat-label>Search By ID</mat-label>
-        <input matInput type="text" [(ngModel)]="ID" [ngModelOptions]="{standalone: true}"  (ngModelChange)='showmarkerWithId()'>
-        <button mat-button *ngIf="ID" matSuffix mat-icon-button aria-label="Clear" (click)="ID=''">
-          <mat-icon>close</mat-icon>
-        </button>
-  
-      </mat-form-field>
-  
-      <mat-form-field >
-        <mat-label>Filter By Type</mat-label>
-        <mat-select [(value)]="selectedType" (selectionChange)="typeChange()">
-          <mat-option>None</mat-option>
-          <mat-option *ngFor="let type of types" [value]="type.value">{{type.viewValue}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field style="width: 250px;">
-        <mat-label>Filter By Date Time</mat-label>
-        <input matInput type="text" [(ngModel)]="date" [owlDateTime]="dt"[owlDateTimeTrigger]="dt" [selectMode]="'range'"  [ngModelOptions]="{standalone: true}" (ngModelChange)="dateChange()">
-        <button mat-button *ngIf="date" matSuffix mat-icon-button aria-label="Clear" (click)="date=''">
-          <mat-icon>close</mat-icon>
-        </button>
-        <owl-date-time pickerMode='dialog'  #dt ></owl-date-time>
-      </mat-form-field>
-    </form>
-    <increment-input [value]="noOfMarker" [step]="5" [min]="0" [max]="10000000" [wrap]="false" (countChanged)="updateMarkerCount($event)"></increment-input>
-    <p class="k-block">
+     <p class="k-block">
       <kendo-dropdownbutton
           [data]="data"
           look="bare"
@@ -44,7 +18,39 @@
   </div>
   
   <!-- display map remaining entire screen -->
-  
-  <app-maps></app-maps>
+  <mat-drawer-container >
+    <mat-drawer #drawer mode='push' style="max-width: 300px;" [mode]="mobileQuery.matches ? 'over' : 'side'"
+    fixedTopGap="56">
+      <form style="padding: 10px;">
+        <mat-form-field>
+          <mat-label>Search By ID</mat-label>
+          <input matInput type="text" [(ngModel)]="ID" [ngModelOptions]="{standalone: true}"  (ngModelChange)='showmarkerWithId()'>
+          <button mat-button *ngIf="ID" matSuffix mat-icon-button aria-label="Clear" (click)="ID=''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field >
+          <mat-label>Filter By Type</mat-label>
+          <mat-select [(value)]="selectedType" (selectionChange)="typeChange()">
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let type of types" [value]="type.value">{{type.viewValue}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style="width: 250px;">
+          <mat-label>Filter By Date Time</mat-label>
+          <input matInput type="text" [(ngModel)]="date" [owlDateTime]="dt"[owlDateTimeTrigger]="dt" [selectMode]="'range'"  [ngModelOptions]="{standalone: true}" (ngModelChange)="dateChange()">
+          <button mat-button *ngIf="date" matSuffix mat-icon-button aria-label="Clear" (click)="date=''">
+            <mat-icon>close</mat-icon>
+          </button>
+          <owl-date-time pickerMode='dialog'  #dt ></owl-date-time>
+        </mat-form-field>
+        <increment-input [value]="noOfMarker" [step]="5" [min]="0" [max]="10000000" [wrap]="false" (countChanged)="updateMarkerCount($event)"></increment-input>
+      </form>
+    </mat-drawer>
+    <mat-drawer-content>
+      <app-maps></app-maps>
+    </mat-drawer-content>
+  </mat-drawer-container>
+
   
   

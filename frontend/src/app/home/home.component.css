@@ -25,16 +25,19 @@
   }
 
   .toolbar {
-    position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 60px;
+    height: 8vh;
     display: flex;
     align-items: center;
     background-color: #153352;
     color: white;
     font-weight: 600;
+  }
+
+  mat-drawer-container {
+    height: 92vh;
   }
 
   .toolbar img {
@@ -298,7 +301,7 @@
 }
 
 .map-container {
-  height:91%
+  height:100%;
 }
 .datetime{
   width: 300px;

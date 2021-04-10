@@ -1,10 +1,11 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AssetDetail } from '../AssetDetail';
 import { BackendService } from '../backend.service';
 import { DataBindingService } from '../data-binding.service';
 import { MapsComponent } from '../maps/maps.component';
+import {MediaMatcher} from '@angular/cdk/layout';
 
 interface Types {
   value: string;
@@ -30,7 +31,12 @@ export class HomeComponent implements OnInit {
   constructor(private backend:BackendService,
     private dataService: DataBindingService,
     private router: Router,
-    public dialog: MatDialog ) {}
+    public dialog: MatDialog ,
+    changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
+      this.mobileQuery = media.matchMedia('(max-width: 600px)');
+this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+this.mobileQuery.addListener(this._mobileQueryListener);
+    }
 
   noOfMarker:number
   title = 'Jumbo GPS';
@@ -141,6 +147,12 @@ updateMarkerCount(a){
     this.dataService.changeData(assets)
   })
 }
+mobileQuery: MediaQueryList
+private _mobileQueryListener: () => void;
+ngOnDestroy(): void {
+  this.mobileQuery.removeListener(this._mobileQueryListener);
+}
+
 }
 
 interface Role {
