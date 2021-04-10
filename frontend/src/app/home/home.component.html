@@ -18,8 +18,7 @@
   </div>
   
   <!-- display map remaining entire screen -->
-  <mat-drawer-container class="map-container" >
-    
+  <mat-drawer-container >
     <mat-drawer #drawer mode='push' style="max-width: 300px;" [mode]="mobileQuery.matches ? 'over' : 'side'"
     fixedTopGap="56">
       <form style="padding: 10px;">
@@ -29,9 +28,7 @@
           <button mat-button *ngIf="ID" matSuffix mat-icon-button aria-label="Clear" (click)="ID=''">
             <mat-icon>close</mat-icon>
           </button>
-    
         </mat-form-field>
-    
         <mat-form-field >
           <mat-label>Filter By Type</mat-label>
           <mat-select [(value)]="selectedType" (selectionChange)="typeChange()">
@@ -49,8 +46,6 @@
         </mat-form-field>
         <increment-input [value]="noOfMarker" [step]="5" [min]="0" [max]="10000000" [wrap]="false" (countChanged)="updateMarkerCount($event)"></increment-input>
       </form>
-     
-    
     </mat-drawer>
     <mat-drawer-content>
       <app-maps></app-maps>

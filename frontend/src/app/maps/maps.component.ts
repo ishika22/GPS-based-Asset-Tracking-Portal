@@ -173,7 +173,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
       this.markers.forEach((i)=>{
         bounds.extend(i.position)
       })
-      this.map?.fitBounds(bounds,200)
+      this.map?.fitBounds(bounds)
   }
   closeDrawing(){
     this.drawingManger.setMap(null)
