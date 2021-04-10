@@ -111,6 +111,10 @@ this.mobileQuery.addListener(this._mobileQueryListener);
       this.backend.addNewUser(result).subscribe( (isSucess)=>{      
         if(isSucess == 'OK')
         alert('User saved successfully');
+        else if(isSucess == 'CONFLICT')
+        alert("User already exists");
+        else
+        alert('New user could not be created');
       })
       console.log('The dialog was closed',result);
     });
