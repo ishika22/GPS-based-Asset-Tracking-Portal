@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "notification-test-8be5b": {
+      "hosting": {
+        "frontend": [
+          "jumbogps"
+        ]
+      }
+    }
+  }
+}
