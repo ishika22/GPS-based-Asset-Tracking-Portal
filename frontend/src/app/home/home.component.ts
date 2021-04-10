@@ -106,8 +106,12 @@ this.mobileQuery.addListener(this._mobileQueryListener);
     this.dialog.open(Dialog, {
       width: '40%',
       panelClass: 'dialog-container-custom' ,
-      data: {firstName: this.firstName,secondName:this.secondName,password: this.password,email:this.email,userName:this.username,role:this.role}
+      data: {firstName: this.firstName,secondName:this.secondName,password: this.password,email:this.email,username:this.username,role:this.role}
     }).afterClosed().subscribe(result => {
+      this.backend.addNewUser(result).subscribe( (isSucess)=>{      
+        if(isSucess == 'OK')
+        alert('User saved successfully');
+      })
       console.log('The dialog was closed',result);
     });
   }

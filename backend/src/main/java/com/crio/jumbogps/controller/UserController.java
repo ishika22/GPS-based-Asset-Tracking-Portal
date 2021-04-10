@@ -89,7 +89,7 @@ public class UserController {
 		return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
 	}
 
-	@GetMapping("securityRole/list")
+	@GetMapping("/securityRole/list")
 	public List<LuSecurityRole> getAllSecurityRoles(){
 		return securityRoleRepository.findAll();
 	}
