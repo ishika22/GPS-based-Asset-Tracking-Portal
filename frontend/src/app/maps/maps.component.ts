@@ -39,13 +39,13 @@ export class MapsComponent implements OnInit,AfterViewInit {
               
   icons: Record<string, { icon: string }> = {
     Salesperson: {
-      icon: "http://maps.google.com/mapfiles/kml/shapes/man.png",
+      icon: "https://maps.google.com/mapfiles/kml/shapes/man.png",
     },
     Truck: {
-      icon: "http://maps.google.com/mapfiles/kml/shapes/truck.png",
+      icon: "https://maps.google.com/mapfiles/kml/shapes/truck.png",
     },
     History:{
-      icon:'http://maps.google.com/mapfiles/kml/paddle/ylw-blank-lv.png'
+      icon:'https://maps.google.com/mapfiles/kml/paddle/ylw-blank-lv.png'
     }
   } 
   
