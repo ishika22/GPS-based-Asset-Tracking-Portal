@@ -1,0 +1,40 @@
+<div>
+    <h1 class="heading" mat-dialog-title>Add new user</h1>
+    <div mat-dialog-content>
+      <form #signup="ngForm">
+      <mat-form-field class="firstName rightmargin">
+        <mat-label>First Name</mat-label>
+        <input name="firstname" matInput [(ngModel)]="data.firstName" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Last Name</mat-label>
+        <input name="lastname" matInput [(ngModel)]="data.secondName">
+      </mat-form-field>
+      <mat-form-field class="email">
+        <mat-label>Email</mat-label>
+        <input name= "email" type = 'email' matInput [(ngModel)]="data.email" required>
+      </mat-form-field>
+      <br>
+      <mat-form-field class="rightmargin">
+        <mat-label>User Name</mat-label>
+        <input name = "username" matInput [(ngModel)]="data.username" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>password</mat-label>
+        <input name = "password" type = 'password' matInput [(ngModel)]="data.password" required>
+        <br>
+      </mat-form-field>
+        <mat-form-field>
+       <mat-label>Role</mat-label>
+        <mat-select name = "role" required [(ngModel)]="data.role" >
+          <mat-option>None</mat-option>
+          <mat-option *ngFor="let selectedRole of rolelist" [value]="selectedRole.pkSecurityRoleId">{{selectedRole.roleName}}</mat-option>
+        </mat-select>
+      </mat-form-field> 
+      </form>
+    </div>
+    <div mat-dialog-actions class="actionbutton">
+      <button mat-button color="warn"  (click)="onNoClick()">No Thanks</button>
+      <button mat-button class="btn" [mat-dialog-close]="data" [disabled]="signup.invalid" cdkFocusInitial>Ok</button>
+    </div>
+    </div>

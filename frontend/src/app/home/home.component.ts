@@ -6,6 +6,7 @@ import { BackendService } from '../backend.service';
 import { DataBindingService } from '../data-binding.service';
 import { MapsComponent } from '../maps/maps.component';
 import {MediaMatcher} from '@angular/cdk/layout';
+import { DialogboxComponent} from '../dialogbox/dialogbox.component';
 
 interface Types {
   value: string;
@@ -103,7 +104,7 @@ this.mobileQuery.addListener(this._mobileQueryListener);
   role:string
 
   dialogService (){
-    this.dialog.open(Dialog, {
+    this.dialog.open(DialogboxComponent, {
       width: '40%',
       panelClass: 'dialog-container-custom' ,
       data: {firstName: this.firstName,secondName:this.secondName,password: this.password,email:this.email,username:this.username,role:this.role}
@@ -159,7 +160,7 @@ ngOnDestroy(): void {
 
 }
 
-interface Role {
+/*interface Role {
   value: string;
   viewValue: string;
 }
@@ -184,7 +185,7 @@ export class Dialog {
   roles:Role[]=[
     {value: '1', viewValue: 'Administrator'},
     {value: '2', viewValue: 'Consultant'}
-  ]
+  ]*/
   /*getRolesvalue(){
     this.backend.getRole().subscribe(data=>{
       console.log(data);
@@ -194,4 +195,4 @@ export class Dialog {
     })
   }*/
 
-}
+//}

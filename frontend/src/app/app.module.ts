@@ -20,7 +20,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LoginComponent } from './login/login.component';
-import { Dialog, HomeComponent } from './home/home.component';
+import { HomeComponent } from './home/home.component';
 import { TokenInterceptor } from './token.interceptor';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
@@ -34,6 +34,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { IncrementInputComponent } from './increment-input/increment-input.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
+
 @NgModule({
 
   declarations: [
@@ -42,9 +43,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     SearchBoxComponent,
     LoginComponent,
     HomeComponent,
-    Dialog,
     DialogNotification,
-    IncrementInputComponent
+    IncrementInputComponent,
+    DialogboxComponent
   ],
   imports: [
     BrowserModule,
@@ -81,6 +82,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
   },MessagingService,AsyncPipe],
 
   bootstrap: [AppComponent],
-  entryComponents:[Dialog,DialogNotification]
+  entryComponents:[DialogNotification]
 })
 export class AppModule { }
