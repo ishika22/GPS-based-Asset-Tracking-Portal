@@ -91,7 +91,7 @@ public class UserController {
 
 	@GetMapping("/securityRole/list")
 	public List<LuSecurityRole> getAllSecurityRoles(){
-		return securityRoleRepository.findAll();
+		return securityRoleRepository.findDistinctRoleName();
 	}
 	
 	@GetMapping("/user/deactiveUser")

@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<LuUser, Integer>  {
 	@Query("UPDATE LuUser SET isActive = 0  where username = :username ")
 	void deactiveUser(@Param("username") String username);
 
-	@Query(value = "SELECT notification_token FROM lu_user WHERE fk_security_role_id = (SELECT pk_security_role_id FROM lu_security_role WHERE role_name = 'Administrator') AND is_active =1 AND notification_token IS NOT NULL",nativeQuery = true)
+	@Query(value = "SELECT notification_token FROM lu_user WHERE fk_security_role_id = (SELECT pk_security_role_id FROM lu_security_role WHERE role_name = 'Administrator') AND is_active =1 AND notification_token IS NOT NULL group by notification_token",nativeQuery = true)
 	String[] getAllTokens();
 
 }
