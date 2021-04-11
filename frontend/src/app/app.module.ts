@@ -33,6 +33,7 @@ import { AsyncPipe } from '../../node_modules/@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { IncrementInputComponent } from './increment-input/increment-input.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { DialogboxComponent} from './dialogbox/dialogbox.component';
 
 
 @NgModule({
