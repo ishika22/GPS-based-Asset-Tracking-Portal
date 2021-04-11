@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BackendService } from '../backend.service';
+import { MessageDialogBoxComponent} from '../message-dialog-box/message-dialog-box.component';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +12,10 @@ import { BackendService } from '../backend.service';
 export class LoginComponent implements OnInit {
   username:string
   password:string
-  constructor(private router: Router,private backend:BackendService) { }
+  constructor(private router: Router,private backend:BackendService,public dialog: MatDialog) { 
+    history.pushState(null, null, window.location.href);  
+  history.pushState(null, null, window.location.href);
+  }
   
   login(){
     this.backend.autheticateUser(this.username,this.password).subscribe(
@@ -18,7 +23,10 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('token', token.token);
           this.router.navigate(['/home'])
       },
-      err=>alert('invalid credentials'))
+      err=>{let payload = {};
+      payload['title'] = 'New user';
+      payload['body'] = 'User cannot be created';
+      this.dialog.open(MessageDialogBoxComponent,{data:payload});})
   }
   ngOnInit(): void {
   }
