@@ -55,7 +55,6 @@ export class BackendService {
 
   addNewUser(result) :Observable<any>{
       let luSecurityRole: LuSecurityRole = {pkSecurityRoleId: result["role"], roleName: null};
-      console.log("abcd",result["firstName"]);
       const url = `${this.serverURL}/user/signup`;
       let data = {};
       data['firstName'] = result["firstName"];

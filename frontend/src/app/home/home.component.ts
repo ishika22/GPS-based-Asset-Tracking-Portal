@@ -7,6 +7,8 @@ import { DataBindingService } from '../data-binding.service';
 import { MapsComponent } from '../maps/maps.component';
 import {MediaMatcher} from '@angular/cdk/layout';
 import { DialogboxComponent} from '../dialogbox/dialogbox.component';
+import { MessageDialogBoxComponent} from '../message-dialog-box/message-dialog-box.component';
+import { BehaviorSubject } from 'rxjs'
 
 interface Types {
   value: string;
@@ -28,6 +30,8 @@ interface DialogData {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  currentMessage = new BehaviorSubject(null);
+
   @ViewChild(MapsComponent, { static: false }) map: MapsComponent
   constructor(private backend:BackendService,
     private dataService: DataBindingService,
@@ -35,8 +39,10 @@ export class HomeComponent implements OnInit {
     public dialog: MatDialog ,
     changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
       this.mobileQuery = media.matchMedia('(max-width: 600px)');
-this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-this.mobileQuery.addListener(this._mobileQueryListener);
+      this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+      this.mobileQuery.addListener(this._mobileQueryListener);
+      history.pushState(null, null, window.location.href);  
+      history.pushState(null, null, window.location.href);
     }
 
   noOfMarker:number
@@ -110,14 +116,29 @@ this.mobileQuery.addListener(this._mobileQueryListener);
       data: {firstName: this.firstName,secondName:this.secondName,password: this.password,email:this.email,username:this.username,role:this.role}
     }).afterClosed().subscribe(result => {
       this.backend.addNewUser(result).subscribe( (isSucess)=>{      
-        if(isSucess == 'OK')
-        alert('User saved successfully');
+        if(isSucess == 'OK'){
+          let payload = {};
+          payload['title'] = 'New user';
+          payload['body'] = 'User saved successfully';
+          this.dialog.open(MessageDialogBoxComponent,{data:payload});
+          this.currentMessage.next(payload);
+        }
         else if(isSucess == 'CONFLICT')
-        alert("User already exists");
+        {
+          let payload = {};
+          payload['title'] = 'New user';
+          payload['body'] = 'User already exists';
+          console.log(payload);
+          this.dialog.open(MessageDialogBoxComponent,{data:payload});
+        }
         else
-        alert('New user could not be created');
+        {
+          let payload = {};
+          payload['title'] = 'New user';
+          payload['body'] = 'User cannot be created';
+          this.dialog.open(MessageDialogBoxComponent,{data:payload});
+        }
       })
-      console.log('The dialog was closed',result);
     });
   }
   public data: Array<any> = [{
@@ -159,40 +180,3 @@ ngOnDestroy(): void {
 }
 
 }
-
-/*interface Role {
-  value: string;
-  viewValue: string;
-}
-
-@Component({
-  selector: 'dialog-box',
-  templateUrl: 'dialog.component.html',
-  styleUrls: ['./dialog.component.css']
-})
-
-export class Dialog {
-
-  constructor(
-    public dialogRef: MatDialogRef<Dialog>,
-    @Inject(MAT_DIALOG_DATA) public data:DialogData,
-    private backend:BackendService) {}
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-  
-  roles:Role[]=[
-    {value: '1', viewValue: 'Administrator'},
-    {value: '2', viewValue: 'Consultant'}
-  ]*/
-  /*getRolesvalue(){
-    this.backend.getRole().subscribe(data=>{
-      console.log(data);
-      data.array.array.forEach(element => {
-        this.roles.push(element["roleName"]);
-      });
-    })
-  }*/
-
-//}

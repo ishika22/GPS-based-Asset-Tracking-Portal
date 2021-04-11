@@ -34,6 +34,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { IncrementInputComponent } from './increment-input/increment-input.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { DialogboxComponent} from './dialogbox/dialogbox.component';
+import { MessageDialogBoxComponent } from './message-dialog-box/message-dialog-box.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { DialogboxComponent} from './dialogbox/dialogbox.component';
     HomeComponent,
     DialogNotification,
     IncrementInputComponent,
-    DialogboxComponent
+    DialogboxComponent,
+    MessageDialogBoxComponent
   ],
   imports: [
     BrowserModule,
