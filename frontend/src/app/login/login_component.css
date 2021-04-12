@@ -12,7 +12,7 @@
         position: absolute;
     }
     .form-box{
-        width: 380px;
+        max-width: 380px;
         height: 400px;
         position: relative;
         margin: 6% auto;
