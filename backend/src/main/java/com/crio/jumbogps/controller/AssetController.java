@@ -111,8 +111,6 @@ public class AssetController {
 		 @RequestParam("endTime")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
 		
 		try {
-			// LocalDateTime start = LocalDateTime.of(date, time)
-			// LocalDateTime end = LocalDateTime.parse(endTime);
 			return assetHistoryRepository.getAssetDetailsByTime(startTime,endTime);
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -120,14 +118,15 @@ public class AssetController {
 		return null;	
 	}
 	
-	@GetMapping("/location/time/id")
+	@GetMapping("/location/time/type")
 	public List<AssetHistory> getAssetsHistoryByIdAndTime(
-		 @RequestParam("id") int assetId,
+		 @RequestParam("type") Integer assetType,
 		 @RequestParam("startTime")@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime ,
 		 @RequestParam("endTime")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
 		
 		try {
-			return assetHistoryRepository.getAssetDetailsByIdAndTime(assetId,startTime,endTime);
+			
+			return assetHistoryRepository.getAssetDetailsByTypeAndTime(assetType,startTime,endTime);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
