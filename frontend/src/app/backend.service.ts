@@ -45,6 +45,13 @@ export class BackendService {
     const Assets = this.http.get<AssetDetail[]>(url)
     return Assets;
   }
+
+  getAssetsBetweenTimeAndType(start:Date,end:Date,typeId:string):Observable<AssetDetail[]>{
+    const url = `${this.serverURL}/location/time/type?type=${typeId}&startTime=${start.toISOString()}&endTime=${end.toISOString()}`;
+    const Assets = this.http.get<AssetDetail[]>(url)
+    return Assets;
+  }
+
   autheticateUser(username:string,password:string):Observable<any>{
     const url = `${this.serverURL}/user/loginUser`;
     let data = {  username,password };

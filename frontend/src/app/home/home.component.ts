@@ -54,9 +54,17 @@ export class HomeComponent implements OnInit {
   ]
   dateChange(){    
     if (this.date[0] && this.date[1]){   
-      this.backend.getAssetsBetweenTime(this.date[0],this.date[1]).subscribe( (assets)=>{ 
-        this.dataService.changeData(assets)
-      })    
+      if(this.selectedType && this.selectedType!=null){
+        this.backend.getAssetsBetweenTimeAndType(this.date[0],this.date[1],this.selectedType).subscribe( (assets)=>{ 
+          this.dataService.changeData(assets)
+        })    
+      }
+      else{
+        this.backend.getAssetsBetweenTime(this.date[0],this.date[1]).subscribe( (assets)=>{ 
+          this.dataService.changeData(assets)
+        }) 
+      }
+         
     }
     else{
       this.backToNormal() 
@@ -75,9 +83,17 @@ export class HomeComponent implements OnInit {
   selectedType:string
   markers=[]
   typeChange(){
+    if (this.date[0] && this.date[1]){
+      this.backend.getAssetsBetweenTimeAndType(this.date[0],this.date[1],this.selectedType).subscribe( (assets)=>{ 
+        this.dataService.changeData(assets)
+      })   
+    }
+    else{
       this.backend.getAssetsByType(this.selectedType,this.noOfMarker).subscribe( (assets)=>{      
         this.dataService.changeData(assets)
       })
+    }
+
   }
   
   backToNormal(){
