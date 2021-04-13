@@ -24,8 +24,8 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/home'])
       },
       err=>{let payload = {};
-      payload['title'] = 'New user';
-      payload['body'] = 'User cannot be created';
+      payload['title'] = 'Login user';
+      payload['body'] = 'Either username or password is incorrect';
       this.dialog.open(MessageDialogBoxComponent,{data:payload});})
   }
   ngOnInit(): void {
