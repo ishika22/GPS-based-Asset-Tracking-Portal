@@ -46,6 +46,9 @@ export class MapsComponent implements OnInit,AfterViewInit {
     },
     History:{
       icon:'https://maps.google.com/mapfiles/kml/paddle/ylw-blank-lv.png'
+    },
+    hidden:{
+      icon:''
     }
   } 
   
@@ -115,9 +118,9 @@ export class MapsComponent implements OnInit,AfterViewInit {
       // }
       
   }
-  
+  hiddenPos
   vertices: google.maps.LatLngLiteral[] =[]
-  openInfo(marker: MapMarker,data:AssetDetail) {
+  openInfo(marker: MapMarker,data:AssetDetail,hidden: MapMarker) {
     const type=data.fkAssetId.fkAssetType.assetType
     const name=data.fkAssetId.assetName
     const contactDetails = data.fkAssetId.assetContactDetail || 'NA'
@@ -151,7 +154,9 @@ export class MapsComponent implements OnInit,AfterViewInit {
       this.enableRouteInput(data.fkAssetId.pkAssetId)
     },{ once: true })}
   );
-    this.info.open(marker)
+  this.hiddenPos=marker.getPosition()
+  hidden.marker.setDraggable(true)
+    this.info.open(hidden)
   }
 
   loadHistory(id){
@@ -173,6 +178,7 @@ export class MapsComponent implements OnInit,AfterViewInit {
       this.markers.forEach((i)=>{
         bounds.extend(i.position)
       })
+      this.hiddenPos=new google.maps.LatLng(null)
       this.map?.fitBounds(bounds)
   }
   closeDrawing(){

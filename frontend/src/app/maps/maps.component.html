@@ -12,7 +12,7 @@
       *ngFor="let marker of markers"
       [position]="marker.position"
       [options]="marker.options"
-      (mapClick)="openInfo(markerElem,marker.data)"
+      (mapClick)="openInfo(markerElem,marker.data,hiddenMarker)"
     >
     </map-marker>
     <map-marker
@@ -21,6 +21,11 @@
       [position]=vertice
     >
   </map-marker>
+  <map-marker
+      #hiddenMarker="mapMarker"
+      [position]=hiddenPos
+      [options]=icons.hidden
+    ></map-marker>
   <map-info-window  (closeclick)="closeClick()"></map-info-window>
   <map-polyline [path]="vertices"></map-polyline>
 </google-map>
