@@ -25,7 +25,7 @@
         <mat-form-field>
           <mat-label>Search By ID</mat-label>
           <input matInput type="text" [(ngModel)]="ID" [ngModelOptions]="{standalone: true}"  (ngModelChange)='showmarkerWithId()'>
-          <button mat-button *ngIf="ID" matSuffix mat-icon-button aria-label="Clear" (click)="ID=''">
+          <button mat-button *ngIf="ID" matSuffix mat-icon-button aria-label="Clear" (click)="ID='';showmarkerWithId()">
             <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
@@ -39,7 +39,7 @@
         <mat-form-field style="width: 250px;">
           <mat-label>Filter By Date Time</mat-label>
           <input matInput type="text" [(ngModel)]="date" [owlDateTime]="dt"[owlDateTimeTrigger]="dt" [selectMode]="'range'"  [ngModelOptions]="{standalone: true}" (ngModelChange)="dateChange()">
-          <button mat-button *ngIf="date" matSuffix mat-icon-button aria-label="Clear" (click)="date=''">
+          <button mat-button *ngIf="date" matSuffix mat-icon-button aria-label="Clear" (click)="date='';typeChange()">
             <mat-icon>close</mat-icon>
           </button>
           <owl-date-time pickerMode='dialog'  #dt ></owl-date-time>
