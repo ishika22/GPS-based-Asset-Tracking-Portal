@@ -8,6 +8,6 @@
   3. Execute the command <b>cd frontend</b> and then <b>ng serve</b> to start the server. Server will get started on port 4200. <br>
   4. Follow this link <b>http://localhost:4200/login</b> to view the login page.<br>
   5. Credentials: username: dummy_user password:Test@123<br>
-  6. To recieve notifications, allow the notifications in browser.
+  6. To recieve notifications, allow the notifications in browser.<br><br>
   <b>For details on the endpoints, please refer to :
   https://sarveksana.ml/swagger-ui/ </b>
