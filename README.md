@@ -19,5 +19,5 @@
   8. To recieve notifications, allow the notifications in browser.<br><br>
   
       
-   The app can also be accessed publicly by clicking on  <b> <a href = "https://jumbogps.web.app/login">JUMBOGPS</a></b> Please login using the same credentials mentioned above<br><br>
+   The app can also be accessed publicly by clicking on  <b> <a href = "https://jumbogps.web.app/login">JUMBOGPS</a></b> Please login using the same credentials mentioned above.<br><br>
   <b><a href = "https://sarveksana.ml/swagger-ui/">Swagger for details</a></b>
