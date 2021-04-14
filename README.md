@@ -8,6 +8,12 @@
   3. Execute the command <b>cd frontend</b> and then <b>ng serve</b> to start the server. Server will get started on port 4200. <br>
   4. Follow this link <b>http://localhost:4200/login</b> to view the login page.<br>
   5. Credentials: username: dummy_user password:Test@123<br>
-  6. To recieve notifications, allow the notifications in browser.<br><br>
+  6. To recieve notifications, allow the notifications in browser.<br>
+  7. To setup database in local, make changes in <b>application.properties</b> (Path: backend/src/main/resources). Below are the properties which needs to be changed: <br>
+      1. spring.datasource.url = <your database/schema><br>
+      2. spring.datasource.username = <database_username><br>
+      3. spring.datasource.password= <database_password><br><br>
+      
+   The app can also be accessed publicly from <br> https://jumbogps.web.app/login </b> Please login using the same credentials mentioned above<br><br>
   <b>For details on the endpoints, please refer to :
   https://sarveksana.ml/swagger-ui/ </b>
