@@ -10,9 +10,13 @@
       3. spring.datasource.password = <database_password><br>
   3. Run the main class JumbogpsBackendApplication.java (Path: backend/src/main/java/com/crio/jumbogps)<br>
   4. Execute the command <b>cd frontend</b> and then <b>ng serve</b> to start the server. Server will get started on port 4200. <br>
-  5. Follow this link <b>http://localhost:4200/login</b> to view the login page.<br>
-  6. Credentials: username: dummy_user password:Test@123<br>
-  7. To recieve notifications, allow the notifications in browser.<br><br>
+  5. When running for the first time, create a dummy user for yourself using the query given below:<br>
+      INSERT INTO `lu_user` (`first_name`, `last_name`, `email`, `username`, `password`, 
+      `fk_security_role_id`, `is_active`) VALUES ('Dummy', 'User', 'dummy_user', 'dummy_user', 
+      '$2a$10$EZYghUaylPejXbRfQvDg2uxEzgphpK0.fFtDcWdZF5a5QKKVDeM4y', '1', '1'); <br>
+  6. Follow this link <b>http://localhost:4200/login</b> to view the login page.<br>
+  7. Credentials: username: dummy_user password:Test@123<br>
+  8. To recieve notifications, allow the notifications in browser.<br><br>
   
       
    The app can also be accessed publicly from <b> https://jumbogps.web.app/login </b> Please login using the same credentials mentioned above<br><br>
