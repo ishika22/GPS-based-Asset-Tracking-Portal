@@ -14,7 +14,7 @@
       INSERT INTO `lu_user` (`first_name`, `last_name`, `email`, `username`, `password`, 
       `fk_security_role_id`, `is_active`) VALUES ('Dummy', 'User', 'dummy_user', 'dummy_user', 
       '$2a$10$EZYghUaylPejXbRfQvDg2uxEzgphpK0.fFtDcWdZF5a5QKKVDeM4y', '1', '1'); <br>
-  6. Follow this link <b>http://localhost:4200/login</b> to view the login page.<br>
+  6. Follow this clicking on  <b> <a href = "http://localhost:4200/login">JUMBOGPS localhost</a></b> to view the login page.<br>
   7. Credentials: username: dummy_user password:Test@123<br>
   8. To recieve notifications, allow the notifications in browser.<br><br>
   
