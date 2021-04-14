@@ -20,5 +20,4 @@
   
       
    The app can also be accessed publicly from <b> https://jumbogps.web.app/login </b> Please login using the same credentials mentioned above<br><br>
-  <b>For details on the endpoints, please refer to :
-  https://sarveksana.ml/swagger-ui/ </b>
+  <b><a href = "https://sarveksana.ml/swagger-ui/">Swagger for details</a></b>
