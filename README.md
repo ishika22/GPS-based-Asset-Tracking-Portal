@@ -12,8 +12,8 @@
   7. To setup database in local, make changes in <b>application.properties</b> (Path: backend/src/main/resources). Below are the properties which needs to be changed: <br>
       1. spring.datasource.url = <your database/schema><br>
       2. spring.datasource.username = <database_username><br>
-      3. spring.datasource.password= <database_password><br><br>
+      3. spring.datasource.password = <database_password><br><br>
       
-   The app can also be accessed publicly from <br> https://jumbogps.web.app/login </b> Please login using the same credentials mentioned above<br><br>
+   The app can also be accessed publicly from <b> https://jumbogps.web.app/login </b> Please login using the same credentials mentioned above<br><br>
   <b>For details on the endpoints, please refer to :
   https://sarveksana.ml/swagger-ui/ </b>
